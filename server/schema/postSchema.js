@@ -30,11 +30,17 @@ const postTypeDefs = `#graphql
     content: String!, 
     tags: String!, 
     imgUrl: String!, 
-    authorId: Int!
+    authorId: String!
+  }
+
+  input CommentForm {
+    content: String!,
+    username: String!
   }
 
   type Mutation {
     addPost(newPost: PostForm): Post
+    addComment(postId: String!, newComment: CommentForm!): Post
   }
 
   type Query {
@@ -71,6 +77,23 @@ const postResolvers = {
 
       const newPost = await Post.getPostById(newPostId);
       return newPost;
+    },
+    addComment: async (_, args) => {
+      const { postId } = args;
+      const { content, username } = args.newComment;
+
+      if (!content) {
+        throw new Error("Content is required");
+      }
+
+      if (!username) {
+        throw new Error("Username is required");
+      }
+
+      await Post.addComment(postId, { content, username });
+
+      const updatedPost = await Post.getPostById(postId);
+      return updatedPost;
     },
   },
 };

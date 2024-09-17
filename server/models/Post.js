@@ -22,6 +22,17 @@ class Post {
   static async getPostById(id) {
     return await db.collection("Posts").findOne({ _id: new ObjectId(id) });
   }
+
+  static async addComment(postId, comment) {
+    comment.createdAt = new Date();
+    comment.updatedAt = new Date();
+    return db
+      .collection("Posts")
+      .updateOne(
+        { _id: new ObjectId(postId) },
+        { $push: { comments: comment }, $set: { updatedAt: new Date() } }
+      );
+  }
 }
 
 module.exports = Post;
