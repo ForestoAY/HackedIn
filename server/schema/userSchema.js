@@ -1,6 +1,6 @@
 const userTypeDefs = `#graphql
   type User {
-    _id: String
+    _id: Int
     name: String
     username: String!
     email: String!
@@ -10,6 +10,10 @@ const userTypeDefs = `#graphql
   type Query {
     users: [User],
     search(username: String!): [User]
+  }
+
+  type Mutation {
+    register(name: String!, username: String!, email: String!, password: String!): User!
   }
 `;
 
@@ -37,6 +41,17 @@ const userResolvers = {
       return users.filter((user) =>
         user.username.toLowerCase().includes(args.username.toLowerCase())
       );
+    },
+  },
+  Mutation: {
+    register: (_, args) => {
+      const newUser = {
+        ...args,
+        _id: users.length + 1,
+      };
+      users.push(newUser);
+
+      return newUser;
     },
   },
 };
