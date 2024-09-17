@@ -1,19 +1,32 @@
+const Follow = require("../models/Follow");
+
 const followTypeDefs = `#graphql
   type Follow {
     _id: String
-    followingId: Int
-    followerId: Int
+    followingId: String
+    followerId: String
     createdAt: String
     updatedAt: String
   }
 
-  type Query {
-
+  type Mutation {
+    followUser(followingId: String!, followerId: String!): Follow
   }
 `;
 
 const followResolvers = {
-  Query: {},
+  Mutation: {
+    followUser: async (_, args) => {
+      const { followingId, followerId } = args;
+
+      const result = await Follow.addFollow(followingId, followerId);
+
+      const newFollowId = result.insertedId;
+
+      const newFollow = await Follow.getFollowById(newFollowId);
+      return newFollow;
+    },
+  },
 };
 
 module.exports = {
