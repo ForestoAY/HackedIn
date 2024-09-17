@@ -1,3 +1,5 @@
+const Post = require("../models/Post");
+
 const postTypeDefs = `#graphql
   type Post {
     _id: String
@@ -63,7 +65,9 @@ const posts = [
 
 const postResolvers = {
   Query: {
-    posts: () => posts,
+    posts: async () => {
+      return Post.getPosts();
+    },
   },
   Mutation: {
     addPost: (_, args) => {
@@ -74,8 +78,8 @@ const postResolvers = {
       posts.push(newPost);
 
       return newPost;
-    }
-  }
+    },
+  },
 };
 
 module.exports = {
