@@ -19,10 +19,16 @@ class User {
     return await db.collection("Users").findOne({ username });
   }
 
-  static async searchByUsername(username) {
+  static async searchUser(keyword) {
+    const searchRegex = new RegExp(keyword, "i");
     return await db
       .collection("Users")
-      .find({ username: { $regex: username, $options: "i" } })
+      .find({
+        $or: [
+          { username: { $regex: searchRegex } },
+          { name: { $regex: searchRegex } },
+        ],
+      })
       .toArray();
   }
 

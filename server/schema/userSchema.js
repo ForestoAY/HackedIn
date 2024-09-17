@@ -24,7 +24,7 @@ const userTypeDefs = `#graphql
 
   type Query {
     user(_id: String!): User,
-    search(username: String!): [User]
+    search(keyword: String!): [User]
   }
 
   type Mutation {
@@ -40,7 +40,7 @@ const userResolvers = {
       return user;
     },
     search: async (_, args) => {
-      const users = await User.searchByUsername(args.username);
+      const users = await User.searchUser(args.keyword);
       return users;
     },
   },
