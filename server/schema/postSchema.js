@@ -38,9 +38,14 @@ const postTypeDefs = `#graphql
     username: String!
   }
 
+  input LikeForm {
+    username: String!
+  }
+
   type Mutation {
     addPost(newPost: PostForm): Post
     addComment(postId: String!, newComment: CommentForm!): Post
+    addLike(postId: String!, newLike: LikeForm!): Post
   }
 
   type Query {
@@ -91,6 +96,19 @@ const postResolvers = {
       }
 
       await Post.addComment(postId, { content, username });
+
+      const updatedPost = await Post.getPostById(postId);
+      return updatedPost;
+    },
+    addLike: async (_, args) => {
+      const { postId } = args;
+      const { username } = args.newLike;
+
+      if (!username) {
+        throw new Error("Username is required");
+      }
+
+      await Post.addLike(postId, { username });
 
       const updatedPost = await Post.getPostById(postId);
       return updatedPost;

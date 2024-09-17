@@ -33,6 +33,17 @@ class Post {
         { $push: { comments: comment }, $set: { updatedAt: new Date() } }
       );
   }
+
+  static async addLike(postId, like) {
+    like.createdAt = new Date();
+    like.updatedAt = new Date();
+    return db
+      .collection("Posts")
+      .updateOne(
+        { _id: new ObjectId(postId) },
+        { $push: { likes: like }, $set: { updatedAt: new Date() } }
+      );
+  }
 }
 
 module.exports = Post;
