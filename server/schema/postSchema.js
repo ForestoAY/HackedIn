@@ -1,10 +1,10 @@
 const postTypeDefs = `#graphql
   type Post {
     _id: Int
-    content: String
+    content: String!
     tags: String
     imgUrl: String
-    authorId: String
+    authorId: Int!
     comments: [Comment]
     likes: [Like]
     createdAt: String
@@ -24,12 +24,15 @@ const postTypeDefs = `#graphql
     updatedAt: String
   }
 
-  type Follow {
-    _id: String
-    followingId: String
-    followerId: String
-    createdAt: String
-    updatedAt: String
+  input PostForm {
+    content: String!, 
+    tags: String!, 
+    imgUrl: String!, 
+    authorId: Int!
+  }
+
+  type Mutation {
+    addPost(newPost: PostForm): Post
   }
 
   type Query {
@@ -62,6 +65,17 @@ const postResolvers = {
   Query: {
     posts: () => posts,
   },
+  Mutation: {
+    addPost: (_, args) => {
+      const newPost = {
+        ...args.newPost,
+        _id: posts.length + 1,
+      };
+      posts.push(newPost);
+
+      return newPost;
+    }
+  }
 };
 
 module.exports = {
