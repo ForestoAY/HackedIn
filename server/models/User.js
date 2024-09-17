@@ -19,6 +19,13 @@ class User {
     return await db.collection("Users").findOne({ username });
   }
 
+  static async searchByUsername(username) {
+    return await db
+      .collection("Users")
+      .find({ username: { $regex: username, $options: "i" } })
+      .toArray();
+  }
+
   static async getUserById(id) {
     return await db.collection("Users").findOne({ _id: new ObjectId(id) });
   }

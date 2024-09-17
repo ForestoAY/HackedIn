@@ -39,6 +39,10 @@ const userResolvers = {
       const user = await User.getUserById(args._id);
       return user;
     },
+    search: async (_, args) => {
+      const users = await User.searchByUsername(args.username);
+      return users;
+    },
   },
   Mutation: {
     register: async (_, args) => {
