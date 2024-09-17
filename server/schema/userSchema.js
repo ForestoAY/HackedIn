@@ -12,8 +12,15 @@ const userTypeDefs = `#graphql
     search(username: String!): [User]
   }
 
+  input UserForm {
+    name: String!, 
+    username: String!, 
+    email: String!, 
+    password: String!
+  }
+
   type Mutation {
-    register(name: String!, username: String!, email: String!, password: String!): User!
+    register(newUser: UserForm): User!
   }
 `;
 
@@ -46,7 +53,7 @@ const userResolvers = {
   Mutation: {
     register: (_, args) => {
       const newUser = {
-        ...args,
+        ...args.newUser,
         _id: users.length + 1,
       };
       users.push(newUser);
