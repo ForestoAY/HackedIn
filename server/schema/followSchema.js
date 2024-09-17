@@ -1,6 +1,6 @@
 const followTypeDefs = `#graphql
   type Follow {
-    _id: String
+    _id: Int
     followingId: String
     followerId: String
     createdAt: String

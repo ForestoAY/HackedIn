@@ -1,6 +1,6 @@
 const postTypeDefs = `#graphql
   type Post {
-    _id: String
+    _id: Int
     content: String
     tags: String
     imgUrl: String
