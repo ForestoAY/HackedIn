@@ -6,7 +6,7 @@ const postTypeDefs = `#graphql
     content: String!
     tags: String
     imgUrl: String
-    authorId: Int!
+    authorId: String!
     comments: [Comment]
     likes: [Like]
     createdAt: String
@@ -39,44 +39,37 @@ const postTypeDefs = `#graphql
 
   type Query {
     posts: [Post],
+    post(_id: String!): Post,
   }
 `;
-
-const posts = [
-  {
-    _id: 1,
-    content: "Hahahehe",
-    tags: "welcome",
-    imgUrl: "https://gambar.com",
-    authorId: 1,
-    comments: [
-      {
-        content: "hahahehe juga",
-        username: "user2username",
-      },
-    ],
-    likes: [
-      {
-        username: "user2username",
-      },
-    ],
-  },
-];
 
 const postResolvers = {
   Query: {
     posts: async () => {
       return Post.getPosts();
     },
+    post: async (_, args) => {
+      const post = await Post.getPostById(args._id);
+      return post;
+    },
   },
   Mutation: {
-    addPost: (_, args) => {
-      const newPost = {
-        ...args.newPost,
-        _id: posts.length + 1,
-      };
-      posts.push(newPost);
+    addPost: async (_, args) => {
+      const { content, imgUrl, tags, authorId } = args.newPost;
 
+      if (!content) {
+        throw new Error("Content is required");
+      }
+
+      if (!authorId) {
+        throw new Error("AuthorId is required");
+      }
+
+      const result = await Post.addPost(content, imgUrl, tags, authorId);
+
+      const newPostId = result.insertedId;
+
+      const newPost = await Post.getPostById(newPostId);
       return newPost;
     },
   },
