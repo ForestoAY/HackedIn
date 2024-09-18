@@ -44,8 +44,8 @@ const postTypeDefs = `#graphql
 
   type Mutation {
     addPost(newPost: PostForm): Post
-    addComment(postId: String!, newComment: CommentForm!): Post
-    addLike(postId: String!, newLike: LikeForm!): Post
+    addComment(postId: String!, newComment: CommentForm): Post
+    addLike(postId: String!, newLike: LikeForm): Post
   }
 
   type Query {
@@ -100,11 +100,10 @@ const postResolvers = {
       const updatedPost = await Post.getPostById(postId);
       return updatedPost;
     },
-    addLike: async (_, args) => {
+    addLike: async (_, args, contextValue) => {
       const user = await contextValue.auth();
 
       const { postId } = args;
-      let { username } = args.newLike;
 
       username = user.username;
 
