@@ -4,7 +4,7 @@ const User = require("../models/User");
 
 const userTypeDefs = `#graphql
   type User {
-    _id: String
+    _id: ID
     name: String
     username: String!
     email: String!
@@ -17,9 +17,9 @@ const userTypeDefs = `#graphql
 
   input UserForm {
     name: String,
-    username: String!,
-    email: String!,
-    password: String!
+    username: String,
+    email: String,
+    password: String
   }
 
   type Query {
@@ -29,7 +29,7 @@ const userTypeDefs = `#graphql
 
   type Mutation {
     register(newUser: UserForm): User!
-    login(username: String!, password: String!): LoginResponse!
+    login(username: String, password: String): LoginResponse!
   }
 `;
 

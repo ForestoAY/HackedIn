@@ -2,11 +2,11 @@ const Post = require("../models/Post");
 
 const postTypeDefs = `#graphql
   type Post {
-    _id: String
+    _id: ID
     content: String!
-    tags: String
+    tags: [String]
     imgUrl: String
-    authorId: String!
+    authorId: ID!
     comments: [Comment]
     likes: [Like]
     createdAt: String
@@ -27,19 +27,19 @@ const postTypeDefs = `#graphql
   }
 
   input PostForm {
-    content: String!, 
-    tags: String!, 
-    imgUrl: String!, 
-    authorId: String!
+    content: String
+    tags: [String]
+    imgUrl: String
+    authorId: ID
   }
 
   input CommentForm {
-    content: String!,
-    username: String!
+    content: String
+    username: String
   }
 
   input LikeForm {
-    username: String!
+    username: String
   }
 
   type Mutation {
