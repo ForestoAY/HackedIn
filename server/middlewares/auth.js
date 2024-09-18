@@ -13,7 +13,7 @@ async function auth(req) {
   const user = await User.getUserById(payload._id);
   if (!user) throw new Error("Invalid token");
 
-  return user[0];
+  return user;
 }
 
 module.exports = auth;

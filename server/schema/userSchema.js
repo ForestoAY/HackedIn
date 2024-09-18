@@ -39,8 +39,8 @@ const userResolvers = {
   Query: {
     user: async (_, args, contextValue) => {
       await contextValue.auth();
-      const user = await User.getUserById(args._id);
-      return user[0];
+      const user = await User.getUserWithFollow(args._id);
+      return user;
     },
     search: async (_, args, contextValue) => {
       await contextValue.auth();

@@ -33,6 +33,10 @@ class User {
   }
 
   static async getUserById(id) {
+    return await db.collection("Users").findOne({ _id: new ObjectId(id) });
+  }
+
+  static async getUserWithFollow(id) {
     return await db
       .collection("Users")
       .aggregate([
@@ -63,7 +67,7 @@ class User {
           },
         },
       ])
-      .toArray();
+      .next();
   }
 }
 
