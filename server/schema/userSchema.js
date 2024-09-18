@@ -35,11 +35,13 @@ const userTypeDefs = `#graphql
 
 const userResolvers = {
   Query: {
-    user: async (_, args) => {
+    user: async (_, args, contextValue) => {
+      await contextValue.auth();
       const user = await User.getUserById(args._id);
       return user;
     },
-    search: async (_, args) => {
+    search: async (_, args, contextValue) => {
+      await contextValue.auth();
       const users = await User.searchUser(args.keyword);
       return users;
     },
@@ -84,7 +86,7 @@ const userResolvers = {
     },
     login: async (_, args) => {
       const { username, password } = args;
-      
+
       if (!username) {
         throw new Error("Username is required");
       }
@@ -96,14 +98,16 @@ const userResolvers = {
       if (!user) {
         throw new Error("Invalid username/password");
       }
-      
-      const isValidPassword = await comparePassword(password, user.password);      
+
+      const isValidPassword = await comparePassword(password, user.password);
       if (!isValidPassword) {
         throw new Error("Invalid username/password");
       }
-      
-      const access_token = signToken({ _id:user._id });
-      
+      const access_token = signToken({
+        _id: user._id,
+        username: user.username,
+      });
+
       return { access_token };
     },
   },

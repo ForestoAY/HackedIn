@@ -56,23 +56,25 @@ const postTypeDefs = `#graphql
 
 const postResolvers = {
   Query: {
-    posts: async () => {
+    posts: async (_, __, contextValue) => {
+      const user = await contextValue.auth();
       return Post.getPosts();
     },
-    post: async (_, args) => {
+    post: async (_, args, contextValue) => {
+      const user = await contextValue.auth();
       const post = await Post.getPostById(args._id);
       return post;
     },
   },
   Mutation: {
     addPost: async (_, args, contextValue) => {
+      const user = await contextValue.auth();
       let { content, imgUrl, tags, authorId } = args.newPost;
 
       if (!content) {
         throw new Error("Content is required");
       }
-      
-      const user = await contextValue.auth();
+
       authorId = user._id;
 
       const result = await Post.addPost(content, imgUrl, tags, authorId);
@@ -82,17 +84,16 @@ const postResolvers = {
       const newPost = await Post.getPostById(newPostId);
       return newPost;
     },
-    addComment: async (_, args) => {
+    addComment: async (_, args, contextValue) => {
+      const user = await contextValue.auth();
       const { postId } = args;
-      const { content, username } = args.newComment;
+      let { content, username } = args.newComment;
 
       if (!content) {
         throw new Error("Content is required");
       }
 
-      if (!username) {
-        throw new Error("Username is required");
-      }
+      username = user.username;
 
       await Post.addComment(postId, { content, username });
 
@@ -100,12 +101,12 @@ const postResolvers = {
       return updatedPost;
     },
     addLike: async (_, args) => {
-      const { postId } = args;
-      const { username } = args.newLike;
+      const user = await contextValue.auth();
 
-      if (!username) {
-        throw new Error("Username is required");
-      }
+      const { postId } = args;
+      let { username } = args.newLike;
+
+      username = user.username;
 
       await Post.addLike(postId, { username });
 
