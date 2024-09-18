@@ -9,7 +9,6 @@ async function auth(req) {
   if (type !== "Bearer") throw new Error("Invalid token");
 
   const payload = verifyToken(token);
-  console.log(payload);
 
   const user = await User.getUserById(payload._id);
   if (!user) throw new Error("Invalid token");

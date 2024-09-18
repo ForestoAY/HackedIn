@@ -4,7 +4,7 @@ const db = require("../config/mongodb");
 class Follow {
   static async addFollow(followingId, followerId) {
     return await db.collection("Follow").insertOne({
-      followingId,
+      followingId: new ObjectId(followingId),
       followerId,
       createdAt: new Date(),
       updatedAt: new Date(),

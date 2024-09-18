@@ -9,6 +9,8 @@ const userTypeDefs = `#graphql
     username: String!
     email: String!
     password: String!
+    following: [Follow]
+    followers: [Follow]
   }
 
   type LoginResponse {
@@ -38,7 +40,7 @@ const userResolvers = {
     user: async (_, args, contextValue) => {
       await contextValue.auth();
       const user = await User.getUserById(args._id);
-      return user;
+      return user[0];
     },
     search: async (_, args, contextValue) => {
       await contextValue.auth();

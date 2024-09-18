@@ -33,7 +33,39 @@ class User {
   }
 
   static async getUserById(id) {
-    return await db.collection("Users").findOne({ _id: new ObjectId(id) });
+    console.log(id);
+
+    return await db
+      .collection("Users")
+      .aggregate([
+        {
+          $match: {
+            _id: new ObjectId(id),
+          },
+        },
+        {
+          $lookup: {
+            from: "Follow",
+            localField: "_id",
+            foreignField: "followerId",
+            as: "following",
+          },
+        },
+        {
+          $lookup: {
+            from: "Follow",
+            localField: "_id",
+            foreignField: "followingId",
+            as: "followers",
+          },
+        },
+        {
+          $project: {
+            password: 0,
+          },
+        },
+      ])
+      .toArray();
   }
 }
 
