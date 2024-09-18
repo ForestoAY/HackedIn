@@ -1,4 +1,11 @@
 const Post = require("../models/Post");
+const Redis = require("ioredis");
+const redis = new Redis({
+  port: process.env.REDIS_PORT,
+  host: process.env.REDIS_HOST,
+  password: process.env.REDIS_PW,
+  db: 0,
+});
 
 const postTypeDefs = `#graphql
   type Post {
@@ -59,7 +66,17 @@ const postResolvers = {
   Query: {
     posts: async (_, __, contextValue) => {
       const user = await contextValue.auth();
-      return Post.getPosts();
+
+      const cache = await redis.get("posts");
+
+      if (cache) {
+        return JSON.parse(cache);
+      }
+
+      const posts = await Post.getPosts();
+      await redis.set("posts", JSON.stringify(posts));
+
+      return posts;
     },
     post: async (_, args, contextValue) => {
       const user = await contextValue.auth();
@@ -77,9 +94,9 @@ const postResolvers = {
       }
 
       authorId = user._id;
-      
-      const result = await Post.addPost(content, imgUrl, tags, authorId);
 
+      const result = await Post.addPost(content, imgUrl, tags, authorId);
+      await redis.del("posts");
       const newPostId = result.insertedId;
 
       const newPost = await Post.getPostById(newPostId);
@@ -97,7 +114,7 @@ const postResolvers = {
       username = user.username;
 
       await Post.addComment(postId, { content, username });
-
+      await redis.del("posts");
       const updatedPost = await Post.getPostById(postId);
       return updatedPost;
     },
@@ -109,7 +126,7 @@ const postResolvers = {
       username = user.username;
 
       await Post.addLike(postId, { username });
-
+      await redis.del("posts");
       const updatedPost = await Post.getPostById(postId);
       return updatedPost;
     },
