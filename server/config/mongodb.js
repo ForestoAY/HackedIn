@@ -1,4 +1,3 @@
-require("dotenv").config();
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const uri = `mongodb+srv://forestoay:${process.env.PASSWORD_DB}@gc01.o3iiv.mongodb.net/?retryWrites=true&w=majority&appName=GC01`;
 
