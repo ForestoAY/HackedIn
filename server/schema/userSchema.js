@@ -46,7 +46,7 @@ const userResolvers = {
   },
   Mutation: {
     register: async (_, args) => {
-      let { username, email, password, name } = args.newUser;
+      const { username, email, password, name } = args.newUser;
 
       if (!username) {
         throw new Error("Username is required");
@@ -75,9 +75,7 @@ const userResolvers = {
       if (existingEmail) {
         throw new Error("Email is already in use");
       }
-      password = hashPassword(password);
-
-      const result = await User.register(username, email, password, name);
+      const result = await User.register(args.newUser);
 
       const newUserId = result.insertedId;
 

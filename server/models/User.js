@@ -1,14 +1,14 @@
 const { ObjectId } = require("mongodb");
 const db = require("../config/mongodb");
+const { hashPassword } = require("../helpers/bcrypt");
 
 class User {
-  static async register(username, email, password, name) {
-    return await db.collection("Users").insertOne({
-      username,
-      email,
-      name,
-      password,
-    });
+  static async register(newUser) {
+    const objNewUser = {
+      ...newUser,
+      password: await hashPassword(newUser.password),
+    };
+    return await db.collection("Users").insertOne(objNewUser);
   }
 
   static async findByEmail(email) {
