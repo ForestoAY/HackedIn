@@ -1,4 +1,4 @@
-const { hashPassword, comparePassword } = require("../helpers/bcrypt");
+const { comparePassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 const User = require("../models/User");
 
@@ -84,6 +84,7 @@ const userResolvers = {
     },
     login: async (_, args) => {
       const { username, password } = args;
+      
       if (!username) {
         throw new Error("Username is required");
       }
@@ -95,14 +96,14 @@ const userResolvers = {
       if (!user) {
         throw new Error("Invalid username/password");
       }
-
-      const isValidPassword = comparePassword(password, user.password);
+      
+      const isValidPassword = await comparePassword(password, user.password);      
       if (!isValidPassword) {
         throw new Error("Invalid username/password");
       }
-
-      const access_token = signToken({ username: user.username });
-
+      
+      const access_token = signToken({ _id:user._id });
+      
       return { access_token };
     },
   },
