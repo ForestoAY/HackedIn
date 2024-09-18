@@ -13,19 +13,25 @@ const userTypeDefs = `#graphql
     followers: [Follow]
   }
 
+  type UserResponse {
+    user: User
+    followings: [Follow]
+    followers: [Follow]
+  }
+
   type LoginResponse {
     access_token: String!
   }
 
   input UserForm {
     name: String,
-    username: String,
-    email: String,
+    username: String
+    email: String
     password: String
   }
 
   type Query {
-    user(_id: String!): User,
+    user(_id: String!): UserResponse
     search(keyword: String!): [User]
   }
 
@@ -39,8 +45,10 @@ const userResolvers = {
   Query: {
     user: async (_, args, contextValue) => {
       await contextValue.auth();
-      const user = await User.getUserWithFollow(args._id);
-      return user;
+      const response = await User.getUserWithFollow(args._id);
+      console.log(response, "<<< response di resolver");
+
+      return response;
     },
     search: async (_, args, contextValue) => {
       await contextValue.auth();

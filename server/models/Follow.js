@@ -11,6 +11,10 @@ class Follow {
     });
   }
 
+  static async getFollows() {
+    return await db.collection("Follow").find().toArray();
+  }
+
   static async getFollowById(id) {
     return await db.collection("Follow").findOne({ _id: new ObjectId(id) });
   }

@@ -37,37 +37,67 @@ class User {
   }
 
   static async getUserWithFollow(id) {
-    return await db
-      .collection("Users")
-      .aggregate([
-        {
-          $match: {
-            _id: new ObjectId(id),
+    const [user, followers, followings] = await Promise.all([
+      this.getUserById(id),
+      db
+        .collection("Follow")
+        .aggregate([
+          {
+            $match: {
+              followerId: new ObjectId(id),
+            },
           },
-        },
-        {
-          $lookup: {
-            from: "Follow",
-            localField: "_id",
-            foreignField: "followerId",
-            as: "following",
+          {
+            $lookup: {
+              from: "Follow",
+              localField: "_id",
+              foreignField: "followingId",
+              as: "follower",
+            },
           },
-        },
-        {
-          $lookup: {
-            from: "Follow",
-            localField: "_id",
-            foreignField: "followingId",
-            as: "followers",
+          {
+            $unwind: {
+              path: "$follower",
+              preserveNullAndEmptyArrays: true,
+            },
           },
-        },
-        {
-          $project: {
-            password: 0,
+        ])
+        .toArray(),
+      db
+        .collection("Follow")
+        .aggregate([
+          {
+            $match: {
+              followingId: new ObjectId(id),
+            },
           },
-        },
-      ])
-      .next();
+          {
+            $lookup: {
+              from: "Follow",
+              localField: "_id",
+              foreignField: "followerId",
+              as: "following",
+            },
+          },
+          {
+            $unwind: {
+              path: "$following",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+        ])
+        .toArray(),
+    ]);
+
+    console.log(user, "<<< promise user");
+    console.log(followers, "<<< followers");
+    console.log(followings, "<<< followings");
+
+    return {
+      user,
+      followers,
+      followings,
+    };
   }
 }
 
