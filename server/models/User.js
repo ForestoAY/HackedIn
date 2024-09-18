@@ -33,8 +33,6 @@ class User {
   }
 
   static async getUserById(id) {
-    console.log(id);
-
     return await db
       .collection("Users")
       .aggregate([

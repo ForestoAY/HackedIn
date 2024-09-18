@@ -77,7 +77,7 @@ const postResolvers = {
       }
 
       authorId = user._id;
-
+      
       const result = await Post.addPost(content, imgUrl, tags, authorId);
 
       const newPostId = result.insertedId;
