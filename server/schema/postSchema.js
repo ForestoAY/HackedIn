@@ -11,6 +11,7 @@ const postTypeDefs = `#graphql
     likes: [Like]
     createdAt: String
     updatedAt: String
+    author: User
   }
 
   type Comment {

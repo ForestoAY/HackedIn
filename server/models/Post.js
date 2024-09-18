@@ -3,7 +3,35 @@ const db = require("../config/mongodb");
 
 class Post {
   static async getPosts() {
-    return db.collection("Posts").find().toArray();
+    return db
+      .collection("Posts")
+      .aggregate([
+        {
+          $lookup: {
+            from: "Users",
+            localField: "authorId",
+            foreignField: "_id",
+            as: "author",
+          },
+        },
+        {
+          $unwind: {
+            path: "$author",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $project: {
+            "author.password": 0,
+          },
+        },
+        {
+          $sort: {
+            createdAt: -1,
+          },
+        },
+      ])
+      .toArray();
   }
 
   static async addPost(content, imgUrl, tags, authorId) {
