@@ -1,4 +1,5 @@
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -9,7 +10,6 @@ import HomePage from "./pages/HomePage";
 import AddPost from "./pages/AddPost";
 import DetailPage from "./pages/DetailPage";
 import SearchPage from "./pages/SearchPage";
-import { Image, Text, TouchableOpacity, View } from "react-native";
 import ProfilePage from "./pages/ProfilePage";
 
 const logo = require("./assets/hacktiv8.png");
@@ -26,6 +26,8 @@ function HomeTabs() {
             iconName = focused ? "home" : "home-outline";
           } else if (route.name === "Search") {
             iconName = focused ? "search" : "search-outline";
+          } else if (route.name === "Profile") {
+            iconName = focused ? "person" : "person-outline";
           }
           return <Icon name={iconName} size={size} color={color} />;
         },
@@ -79,6 +81,15 @@ function HomeTabs() {
       <Tab.Screen
         name="Search"
         component={SearchPage}
+        options={{
+          headerStyle: { backgroundColor: "#83B4FF" },
+          headerTintColor: "#fff",
+          headerTitleStyle: { fontWeight: "bold" },
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfilePage}
         options={{
           headerStyle: { backgroundColor: "#83B4FF" },
           headerTintColor: "#fff",
