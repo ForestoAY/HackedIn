@@ -15,7 +15,6 @@ export default function SearchPage() {
             borderRadius: 7,
           }}
           placeholder="Search users"
-          secureTextEntry
           autoCorrect={false}
           autoCapitalize="none"
         />
