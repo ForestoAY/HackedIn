@@ -10,6 +10,7 @@ import AddPost from "./pages/AddPost";
 import DetailPage from "./pages/DetailPage";
 import SearchPage from "./pages/SearchPage";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import ProfilePage from "./pages/ProfilePage";
 
 const logo = require("./assets/hacktiv8.png");
 const Stack = createStackNavigator();
@@ -101,7 +102,7 @@ export default function App() {
             />
             <Stack.Screen
               name="Add"
-              component={AddPost}
+              component={ProfilePage}
               options={{
                 headerStyle: { backgroundColor: "#83B4FF" },
                 headerTintColor: "#fff",
