@@ -57,11 +57,9 @@ export default function DetailPage({ navigation, route }) {
             alignItems: "center",
             justifyContent: "center",
           }}
+          onPress={() => navigation.goBack()}
         >
-          <Text
-            style={{ color: "white", fontSize: 18, fontWeight: "bold" }}
-            onPress={() => navigation.goBack()}
-          >
+          <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
             Go Back
           </Text>
         </TouchableOpacity>
