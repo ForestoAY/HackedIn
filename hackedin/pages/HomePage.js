@@ -12,22 +12,6 @@ const data = require("../data.json");
 export default function HomePage({ navigation }) {
   return (
     <>
-      <View style={styles.navbar}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Image source={logo} style={{ width: 100, height: 100 }} />
-          <Text style={{ fontSize: 24, fontWeight: "600" }}>HackedIn</Text>
-        </View>
-        <View>
-          <TouchableOpacity
-            style={{ paddingHorizontal: 8 }}
-            onPress={() => {
-              navigation.navigate("Add");
-            }}
-          >
-            <Text style={{ fontSize: 20 }}>Add post</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
       <View style={styles.posts}>
         <FlatList
           data={data}
