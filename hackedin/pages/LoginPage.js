@@ -96,7 +96,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   signup: {
-    color: "#83B4FF",
+    color: "#fff",
+    fontWeight: "600",
     fontSize: 16,
   },
 });
