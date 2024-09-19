@@ -15,6 +15,35 @@ export default function DetailPage({ navigation, route }) {
       </View>
       <View
         style={{
+          flexDirection: "row",
+          marginVertical: 8,
+        }}
+      >
+        <TouchableOpacity>
+          <Text
+            style={{
+              color: "black",
+              fontWeight: "600",
+              marginHorizontal: 8,
+            }}
+          >
+            Like
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text
+            style={{
+              color: "black",
+              fontWeight: "600",
+              marginHorizontal: 8,
+            }}
+          >
+            Comment
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View
+        style={{
           width: "100%",
           paddingHorizontal: 40,
         }}
@@ -29,7 +58,10 @@ export default function DetailPage({ navigation, route }) {
             justifyContent: "center",
           }}
         >
-          <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }} onPress={() => navigation.goBack()}>
+          <Text
+            style={{ color: "white", fontSize: 18, fontWeight: "bold" }}
+            onPress={() => navigation.goBack()}
+          >
             Go Back
           </Text>
         </TouchableOpacity>
