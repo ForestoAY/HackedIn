@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import Icon from "react-native-vector-icons/Feather";
 
 export default function SearchPage() {
   return (
@@ -19,20 +20,107 @@ export default function SearchPage() {
           autoCapitalize="none"
         />
       </View>
-      <View style={styles.container}>
-        <Text style={styles.text}>User here</Text>
+      {/* List of users */}
+      <View
+        style={{
+          flex: 1,
+          marginVertical: 8,
+          marginHorizontal: 12,
+        }}
+      >
+        {/* List per user */}
+        <View
+          style={{
+            justifyContent: "space-between",
+            flexDirection: "row",
+            alignItems: "center",
+            marginVertical: 8,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              marginBottom: 8,
+              paddingHorizontal: 12,
+              fontWeight: "600",
+            }}
+          >
+            User 399
+          </Text>
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              backgroundColor: "#83B4FF",
+              borderRadius: 5,
+              height: 30,
+              alignItems: "center",
+            }}
+          >
+            <Icon
+              name="plus"
+              size={20}
+              color="white"
+              style={{ marginHorizontal: 4, marginStart: 4 }}
+            />
+            <Text
+              style={{
+                color: "white",
+                fontSize: 18,
+                fontWeight: "bold",
+                marginEnd: 8,
+              }}
+            >
+              Follow
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {/* List per user */}
+        <View
+          style={{
+            justifyContent: "space-between",
+            flexDirection: "row",
+            alignItems: "center",
+            marginVertical: 8,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              marginBottom: 8,
+              paddingHorizontal: 12,
+              fontWeight: "600",
+            }}
+          >
+            User 399
+          </Text>
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              backgroundColor: "#83B4FF",
+              borderRadius: 5,
+              height: 30,
+              alignItems: "center",
+            }}
+          >
+            <Icon
+              name="plus"
+              size={20}
+              color="white"
+              style={{ marginHorizontal: 4, marginStart: 4 }}
+            />
+            <Text
+              style={{
+                color: "white",
+                fontSize: 18,
+                fontWeight: "bold",
+                marginEnd: 8,
+              }}
+            >
+              Follow
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginVertical: 8,
-    marginHorizontal: 12,
-  },
-  text: {
-    fontSize: 20,
-  },
-});
