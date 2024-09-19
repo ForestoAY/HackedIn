@@ -96,13 +96,13 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen
-              name="Home"
+              name="HomeStack"
               component={HomeTabs}
               options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Add"
-              component={ProfilePage}
+              component={AddPost}
               options={{
                 headerStyle: { backgroundColor: "#83B4FF" },
                 headerTintColor: "#fff",

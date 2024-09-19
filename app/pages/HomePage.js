@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-const logo = require("../assets/hacktiv8.png");
+import Icon from "react-native-vector-icons/FontAwesome";
 const data = require("../data.json");
 
 export default function HomePage({ navigation }) {
@@ -20,53 +20,90 @@ export default function HomePage({ navigation }) {
             const { item } = info;
             return (
               <>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("Detail", {
-                      post: item,
-                    });
-                  }}
-                >
-                  <View
-                    style={{ backgroundColor: "white", marginVertical: 16 }}
+                <View style={{ backgroundColor: "white", marginBottom: 32 }}>
+                  <Text
+                    style={{
+                      fontSize: 24,
+                      marginBottom: 8,
+                      paddingHorizontal: 12,
+                      fontWeight: "600",
+                    }}
                   >
-                    <Text style={{ fontWeight: "600", marginBottom: 8 }}>
-                      {item.content}
+                    User 1
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("Detail", {
+                        post: item,
+                      });
+                    }}
+                  >
+                    <View>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          marginBottom: 8,
+                          paddingHorizontal: 12,
+                        }}
+                      >
+                        {item.content}
+                      </Text>
+                      <Image
+                        source={{ uri: item.imgUrl }}
+                        style={{ width: "100%", height: 400 }}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      marginVertical: 4,
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        marginHorizontal: 8,
+                        fontSize: 16,
+                        color: "gray",
+                      }}
+                    >
+                      100 likes
                     </Text>
-                    <Image
-                      source={{ uri: item.imgUrl }}
-                      style={{ width: "100%", height: 200 }}
-                    />
+                    <Text
+                      style={{
+                        marginHorizontal: 8,
+                        fontSize: 16,
+                        color: "gray",
+                      }}
+                    >
+                      7 comments
+                    </Text>
                   </View>
-                </TouchableOpacity>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    marginVertical: 8,
-                  }}
-                >
-                  <TouchableOpacity>
-                    <Text
-                      style={{
-                        color: "black",
-                        fontWeight: "600",
-                        marginHorizontal: 8,
-                      }}
-                    >
-                      Like
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity>
-                    <Text
-                      style={{
-                        color: "black",
-                        fontWeight: "600",
-                        marginHorizontal: 8,
-                      }}
-                    >
-                      Comment
-                    </Text>
-                  </TouchableOpacity>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      marginVertical: 4,
+                      paddingBottom: 8,
+                    }}
+                  >
+                    <TouchableOpacity>
+                      <Icon
+                        name="thumbs-o-up"
+                        size={32}
+                        color="black"
+                        style={{ marginHorizontal: 8 }}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                      <Icon
+                        name="comment-o"
+                        size={32}
+                        color="black"
+                        style={{ marginHorizontal: 8 }}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </>
             );
@@ -87,6 +124,6 @@ const styles = StyleSheet.create({
   },
   posts: {
     flex: 1,
-    backgroundColor: "lightyellow",
+    backgroundColor: "lightgray",
   },
 });
