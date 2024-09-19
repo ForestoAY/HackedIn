@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import {
   FlatList,
   Image,
@@ -10,8 +9,7 @@ import {
 const logo = require("../assets/hacktiv8.png");
 const data = require("../data.json");
 
-export default function HomePage() {
-  const navigation = useNavigation();
+export default function HomePage({ navigation }) {
   return (
     <>
       <View style={styles.navbar}>
@@ -20,7 +18,12 @@ export default function HomePage() {
           <Text style={{ fontSize: 24, fontWeight: "600" }}>HackedIn</Text>
         </View>
         <View>
-          <TouchableOpacity style={{ paddingHorizontal: 8 }} onPress={() => {navigation.navigate("Add")}}>
+          <TouchableOpacity
+            style={{ paddingHorizontal: 8 }}
+            onPress={() => {
+              navigation.navigate("Add");
+            }}
+          >
             <Text style={{ fontSize: 20 }}>Add post</Text>
           </TouchableOpacity>
         </View>
@@ -32,15 +35,23 @@ export default function HomePage() {
           renderItem={(info) => {
             const { item } = info;
             return (
-              <View style={{ backgroundColor: "white", marginVertical: 16 }}>
-                <Text style={{ fontWeight: "600", marginBottom: 8 }}>
-                  {item.content}
-                </Text>
-                <Image
-                  source={{ uri: item.imgUrl }}
-                  style={{ width: "100%", height: 200 }}
-                />
-              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Detail", {
+                    post: item,
+                  });
+                }}
+              >
+                <View style={{ backgroundColor: "white", marginVertical: 16 }}>
+                  <Text style={{ fontWeight: "600", marginBottom: 8 }}>
+                    {item.content}
+                  </Text>
+                  <Image
+                    source={{ uri: item.imgUrl }}
+                    style={{ width: "100%", height: 200 }}
+                  />
+                </View>
+              </TouchableOpacity>
             );
           }}
         />
