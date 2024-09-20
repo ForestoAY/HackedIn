@@ -11,7 +11,7 @@ import {
 import Icon from "react-native-vector-icons/Feather";
 import { SEARCH_USERS } from "../apollo/usersOperation";
 
-export default function SearchPage() {
+export default function SearchPage({ navigation }) {
   const [keyword, setKeyword] = useState("");
   const [debounced, setDebounced] = useState(keyword);
   const [searchUsers, { loading, error, data }] = useLazyQuery(SEARCH_USERS);
@@ -72,6 +72,11 @@ export default function SearchPage() {
                   paddingHorizontal: 12,
                   fontWeight: "600",
                 }}
+                onPress={() => {
+                  navigation.push("ProfilePage", {
+                    username: item.username,
+                  });
+                }}
               >
                 {item.username}
               </Text>
@@ -82,6 +87,11 @@ export default function SearchPage() {
                   color: "gray",
                   paddingHorizontal: 12,
                   fontWeight: "600",
+                }}
+                onPress={() => {
+                  navigation.push("ProfilePage", {
+                    username: item.username,
+                  });
                 }}
               >
                 {item.name}
