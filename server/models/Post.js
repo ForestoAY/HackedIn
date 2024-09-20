@@ -48,7 +48,35 @@ class Post {
   }
 
   static async getPostById(id) {
-    return await db.collection("Posts").findOne({ _id: new ObjectId(id) });
+    return await db
+      .collection("Posts")
+      .aggregate([
+        {
+          $match: {
+            _id: new ObjectId(id),
+          },
+        },
+        {
+          $lookup: {
+            from: "Users",
+            localField: "authorId",
+            foreignField: "_id",
+            as: "author",
+          },
+        },
+        {
+          $unwind: {
+            path: "$author",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $project: {
+            "author.password": 0,
+          },
+        },
+      ])
+      .next();
   }
 
   static async addComment(postId, comment) {
