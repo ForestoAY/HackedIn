@@ -1,4 +1,6 @@
+import { useContext, useState } from "react";
 import {
+  Alert,
   Image,
   StyleSheet,
   Text,
@@ -6,9 +8,18 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { AuthContext } from "../context/auth";
+import { useMutation } from "@apollo/client";
+import { LOGIN } from "../apollo/usersOperation";
+import * as SecureStore from "expo-secure-store";
 const logo = require("../assets/hacktiv8.png");
 
-export default function LoginPage() {
+export default function LoginPage({ navigation }) {
+  const authContext = useContext(AuthContext);
+  const [username, setUsername] = useState("foresto");
+  const [password, setPassword] = useState("12121212");
+  const [login, { loading }] = useMutation(LOGIN);
+
   return (
     <View style={styles.container}>
       <Image source={logo} style={styles.image} resizeMode="contain" />
@@ -19,6 +30,8 @@ export default function LoginPage() {
           placeholder="Username"
           autoCorrect={false}
           autoCapitalize="none"
+          value={username}
+          onChangeText={setUsername}
         />
         <TextInput
           style={styles.input}
@@ -26,11 +39,36 @@ export default function LoginPage() {
           secureTextEntry
           autoCorrect={false}
           autoCapitalize="none"
+          value={password}
+          onChangeText={setPassword}
         />
       </View>
       <View style={styles.buttonView}>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>LOGIN</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => {
+            try {
+              const { data } = await login({
+                variables: {
+                  username,
+                  password,
+                },
+              });
+              await SecureStore.setItemAsync(
+                "access_token",
+                data.login.access_token
+              );
+              
+              authContext.setIsSignedIn(true);
+              console.log(authContext);
+            } catch (error) {
+              Alert.alert("error", error.message);
+            }
+          }}
+        >
+          <Text style={styles.buttonText}>
+            {loading ? "LOGIN..." : "LOGIN"}
+          </Text>
         </TouchableOpacity>
       </View>
       <Text style={styles.footerText}>
