@@ -3,14 +3,14 @@ import { deleteItemAsync } from "expo-secure-store";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useQuery } from "@apollo/client";
 import { AuthContext } from "../context/auth";
-import { FIND_BY_USERNAME } from "../apollo/usersOperation";
+import { USER } from "../apollo/usersOperation";
 
 export default function ProfilePage({ route }) {
   const authContext = useContext(AuthContext);
-  const { username } = route.params;
+  const { id } = route.params;
 
-  const { loading, error, data } = useQuery(FIND_BY_USERNAME, {
-    variables: { username: username },
+  const { loading, error, data } = useQuery(USER, {
+    variables: { id: id },
   });
 
   if (loading) {
@@ -29,7 +29,7 @@ export default function ProfilePage({ route }) {
     );
   }
 
-  const { findByUsername: user } = data;
+  const { user } = data;
 
   return (
     <View>
@@ -41,7 +41,7 @@ export default function ProfilePage({ route }) {
           fontWeight: "600",
         }}
       >
-        {user.username}
+        {user.user.username}
       </Text>
       <TouchableOpacity
         style={{

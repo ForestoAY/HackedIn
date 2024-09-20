@@ -48,7 +48,7 @@ export default function HomePage({ navigation }) {
                     }}
                     onPress={() => {
                       navigation.push("ProfilePage", {
-                        username: item.author.username,
+                        id: item.author._id,
                       });
                     }}
                   >

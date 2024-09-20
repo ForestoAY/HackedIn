@@ -69,6 +69,13 @@ export default function DetailPage({ navigation, route }) {
               paddingHorizontal: 12,
               fontWeight: "600",
             }}
+            onPress={() => {
+              console.log(data.post.author._id);
+              
+              navigation.push("ProfilePage", {
+                id: data.post.author._id,
+              });
+            }}
           >
             {data.post.author.username}
           </Text>
@@ -187,8 +194,10 @@ export default function DetailPage({ navigation, route }) {
                   fontWeight: "600",
                 }}
                 onPress={() => {
+                  console.log(item._id, "<< di comment");
+                  
                   navigation.push("ProfilePage", {
-                    username: item.username,
+                    id: item._id,
                   });
                 }}
               >

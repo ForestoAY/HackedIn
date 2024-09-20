@@ -9,11 +9,17 @@ export const GET_POSTS = gql`
       imgUrl
       authorId
       comments {
+        _id
         content
         username
+        createdAt
+        updatedAt
       }
       likes {
+        _id
         username
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -34,12 +40,14 @@ export const GET_POST = gql`
       imgUrl
       authorId
       comments {
+        _id
         content
         username
         createdAt
         updatedAt
       }
       likes {
+        _id
         username
         createdAt
         updatedAt

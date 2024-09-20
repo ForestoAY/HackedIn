@@ -1,5 +1,5 @@
-import { useLazyQuery } from "@apollo/client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import {
   View,
   Text,
@@ -10,11 +10,13 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 import { SEARCH_USERS } from "../apollo/usersOperation";
+import { FOLLOW_USER } from "../apollo/followsOperation";
 
 export default function SearchPage({ navigation }) {
   const [keyword, setKeyword] = useState("");
   const [debounced, setDebounced] = useState(keyword);
-  const [searchUsers, { loading, error, data }] = useLazyQuery(SEARCH_USERS);
+  const [searchUsers, { loading, data }] = useLazyQuery(SEARCH_USERS);
+  const [followUser] = useMutation(FOLLOW_USER);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -31,6 +33,17 @@ export default function SearchPage({ navigation }) {
       searchUsers({ variables: { keyword: debounced } });
     }
   }, [debounced, searchUsers]);
+
+  const handleFollow = async (followingId) => {
+    try {
+      const { data } = await followUser({
+        variables: { followingId },
+      });
+      console.log(`Followed user: ${data.followUser.followingId}`);
+    } catch (error) {
+      console.error("Error following user:", error);
+    }
+  };
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
@@ -52,7 +65,6 @@ export default function SearchPage({ navigation }) {
 
       {loading && <ActivityIndicator size="large" color="#83B4FF" />}
 
-      {/* List of users */}
       <FlatList
         data={data?.search || []}
         keyExtractor={(item) => item._id}
@@ -74,7 +86,7 @@ export default function SearchPage({ navigation }) {
                 }}
                 onPress={() => {
                   navigation.push("ProfilePage", {
-                    username: item.username,
+                    id: item._id,
                   });
                 }}
               >
@@ -90,7 +102,7 @@ export default function SearchPage({ navigation }) {
                 }}
                 onPress={() => {
                   navigation.push("ProfilePage", {
-                    username: item.username,
+                    id: item._id,
                   });
                 }}
               >
@@ -105,9 +117,7 @@ export default function SearchPage({ navigation }) {
                 height: 30,
                 alignItems: "center",
               }}
-              onPress={() => {
-                console.log(`Follow ${item.name}`);
-              }}
+              onPress={() => handleFollow(item._id)} // Pass the ID of the user to follow
             >
               <Icon
                 name="plus"

@@ -30,27 +30,28 @@ export const SEARCH_USERS = gql`
   }
 `;
 
-export const FIND_BY_USERNAME = gql`
-  query findByUsername($username: String!) {
-    findByUsername(username: $username) {
-      _id
-      name
-      username
-      email
-      password
-      following {
-        _id
-        followingId
-        followerId
-        createdAt
-        updatedAt
-      }
+export const USER = gql`
+  query User($id: String!) {
+    user(_id: $id) {
       followers {
         _id
         followingId
         followerId
         createdAt
         updatedAt
+      }
+      followings {
+        _id
+        followingId
+        followerId
+        createdAt
+        updatedAt
+      }
+      user {
+        _id
+        name
+        username
+        email
       }
     }
   }
