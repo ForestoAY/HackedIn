@@ -18,3 +18,14 @@ export const REGISTER = gql`
     }
   }
 `;
+
+export const SEARCH_USERS = gql`
+  query Search($keyword: String!) {
+    search(keyword: $keyword) {
+      _id
+      email
+      name
+      username
+    }
+  }
+`;

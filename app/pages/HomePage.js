@@ -116,7 +116,13 @@ export default function HomePage({ navigation }) {
                         style={{ marginHorizontal: 8 }}
                       />
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate("Detail", {
+                          postId: item._id,
+                        });
+                      }}
+                    >
                       <Icon
                         name="comment-o"
                         size={32}

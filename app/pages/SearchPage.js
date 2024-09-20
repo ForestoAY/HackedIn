@@ -1,126 +1,124 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { useLazyQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+  FlatList,
+} from "react-native";
 import Icon from "react-native-vector-icons/Feather";
+import { SEARCH_USERS } from "../apollo/usersOperation";
 
 export default function SearchPage() {
+  const [keyword, setKeyword] = useState("");
+  const [debounced, setDebounced] = useState(keyword);
+  const [searchUsers, { loading, error, data }] = useLazyQuery(SEARCH_USERS);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebounced(keyword);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [keyword]);
+
+  useEffect(() => {
+    if (debounced) {
+      searchUsers({ variables: { keyword: debounced } });
+    }
+  }, [debounced, searchUsers]);
+
   return (
-    <>
-      <View>
-        <TextInput
-          style={{
-            marginVertical: 8,
-            height: 50,
-            marginHorizontal: 12,
-            paddingHorizontal: 20,
-            borderColor: "#83B4FF",
-            borderWidth: 1,
-            borderRadius: 7,
-          }}
-          placeholder="Search users"
-          autoCorrect={false}
-          autoCapitalize="none"
-        />
-      </View>
-      {/* List of users */}
-      <View
+    <View style={{ flex: 1, padding: 16 }}>
+      <TextInput
         style={{
-          flex: 1,
+          height: 50,
           marginVertical: 8,
-          marginHorizontal: 12,
+          paddingHorizontal: 20,
+          borderColor: "#83B4FF",
+          borderWidth: 1,
+          borderRadius: 7,
         }}
-      >
-        {/* List per user */}
-        <View
-          style={{
-            justifyContent: "space-between",
-            flexDirection: "row",
-            alignItems: "center",
-            marginVertical: 8,
-          }}
-        >
-          <Text
+        placeholder="Search users"
+        autoCorrect={false}
+        autoCapitalize="none"
+        value={keyword}
+        onChangeText={setKeyword}
+      />
+
+      {loading && <ActivityIndicator size="large" color="#83B4FF" />}
+
+      {/* List of users */}
+      <FlatList
+        data={data?.search || []}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => (
+          <View
             style={{
-              fontSize: 20,
-              marginBottom: 8,
-              paddingHorizontal: 12,
-              fontWeight: "600",
-            }}
-          >
-            User 399
-          </Text>
-          <TouchableOpacity
-            style={{
+              justifyContent: "space-between",
               flexDirection: "row",
-              backgroundColor: "#83B4FF",
-              borderRadius: 5,
-              height: 30,
               alignItems: "center",
+              marginVertical: 8,
             }}
           >
-            <Icon
-              name="plus"
-              size={20}
-              color="white"
-              style={{ marginHorizontal: 4, marginStart: 4 }}
-            />
-            <Text
+            <View>
+              <Text
+                style={{
+                  fontSize: 24,
+                  paddingHorizontal: 12,
+                  fontWeight: "600",
+                }}
+              >
+                {item.username}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 20,
+                  marginBottom: 8,
+                  color: "gray",
+                  paddingHorizontal: 12,
+                  fontWeight: "600",
+                }}
+              >
+                {item.name}
+              </Text>
+            </View>
+            <TouchableOpacity
               style={{
-                color: "white",
-                fontSize: 18,
-                fontWeight: "bold",
-                marginEnd: 8,
+                flexDirection: "row",
+                backgroundColor: "#83B4FF",
+                borderRadius: 5,
+                height: 30,
+                alignItems: "center",
+              }}
+              onPress={() => {
+                console.log(`Follow ${item.name}`);
               }}
             >
-              Follow
-            </Text>
-          </TouchableOpacity>
-        </View>
-        {/* List per user */}
-        <View
-          style={{
-            justifyContent: "space-between",
-            flexDirection: "row",
-            alignItems: "center",
-            marginVertical: 8,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 20,
-              marginBottom: 8,
-              paddingHorizontal: 12,
-              fontWeight: "600",
-            }}
-          >
-            User 399
-          </Text>
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              backgroundColor: "#83B4FF",
-              borderRadius: 5,
-              height: 30,
-              alignItems: "center",
-            }}
-          >
-            <Icon
-              name="plus"
-              size={20}
-              color="white"
-              style={{ marginHorizontal: 4, marginStart: 4 }}
-            />
-            <Text
-              style={{
-                color: "white",
-                fontSize: 18,
-                fontWeight: "bold",
-                marginEnd: 8,
-              }}
-            >
-              Follow
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </>
+              <Icon
+                name="plus"
+                size={20}
+                color="white"
+                style={{ marginHorizontal: 4, marginStart: 4 }}
+              />
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: 18,
+                  fontWeight: "bold",
+                  marginEnd: 8,
+                }}
+              >
+                Follow
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+    </View>
   );
 }
