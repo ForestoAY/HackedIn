@@ -8,32 +8,8 @@ import {
   View,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useQuery, gql } from "@apollo/client";
-
-const GET_POSTS = gql`
-  query Posts {
-    posts {
-      _id
-      content
-      tags
-      imgUrl
-      authorId
-      comments {
-        content
-        username
-      }
-      likes {
-        username
-      }
-      createdAt
-      updatedAt
-      author {
-        _id
-        username
-      }
-    }
-  }
-`;
+import { useQuery } from "@apollo/client";
+import { GET_POSTS } from "../apollo/postsOperation";
 
 export default function HomePage({ navigation }) {
   const { loading, error, data } = useQuery(GET_POSTS);

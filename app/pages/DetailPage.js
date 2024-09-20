@@ -6,36 +6,9 @@ import {
   View,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import { GET_POST } from "../apollo/postsOperation";
 
-const GET_POST = gql`
-  query Post($id: String!) {
-    post(_id: $id) {
-      _id
-      content
-      tags
-      imgUrl
-      authorId
-      comments {
-        content
-        username
-        createdAt
-        updatedAt
-      }
-      likes {
-        username
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-      author {
-        _id
-        username
-      }
-    }
-  }
-`;
 export default function DetailPage({ navigation, route }) {
   const { postId } = route.params;
 

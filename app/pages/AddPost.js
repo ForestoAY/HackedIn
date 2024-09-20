@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -5,8 +6,27 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useMutation } from "@apollo/client";
+import { CREATE_POST, GET_POSTS } from "../apollo/postsOperation";
 
-export default function AddPost() {
+export default function AddPost({ navigation }) {
+  const [form, setForm] = useState({
+    content: "content terbaru",
+    imgUrl: "https://via.placeholder.com/300",
+    tags: "newest,post,terbaru",
+  });
+
+  const [addPost, { loading, error, data }] = useMutation(CREATE_POST, {
+    refetchQueries: [GET_POSTS],
+  });
+
+  const handleChange = (name, value) => {
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  };
+
   return (
     <>
       <View></View>
@@ -16,22 +36,41 @@ export default function AddPost() {
           placeholder="Content"
           autoCorrect={false}
           autoCapitalize="none"
+          onChangeText={(value) => handleChange("content", value)}
+          value={form.content}
         />
         <TextInput
           style={styles.input}
           placeholder="Image URL"
           autoCorrect={false}
           autoCapitalize="none"
+          onChangeText={(value) => handleChange("imgUrl", value)}
+          value={form.imgUrl}
         />
         <TextInput
           style={styles.input}
           placeholder="Tags"
           autoCorrect={false}
           autoCapitalize="none"
+          onChangeText={(value) => handleChange("tags", value)}
+          value={form.tags}
         />
       </View>
       <View style={styles.buttonView}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => {
+            await addPost({
+              variables: {
+                newPost: {
+                  ...form,
+                  tags: form.tags.split(","),
+                },
+              },
+            });
+            navigation.goBack();
+          }}
+        >
           <Text style={styles.buttonText}>Submit</Text>
         </TouchableOpacity>
       </View>
