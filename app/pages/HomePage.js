@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   StyleSheet,
@@ -7,14 +8,55 @@ import {
   View,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-const data = require("../data.json");
+import { useQuery, gql } from "@apollo/client";
+
+const GET_POSTS = gql`
+  query Posts {
+    posts {
+      _id
+      content
+      tags
+      imgUrl
+      authorId
+      comments {
+        content
+        username
+      }
+      likes {
+        username
+      }
+      createdAt
+      updatedAt
+      author {
+        _id
+        username
+      }
+    }
+  }
+`;
 
 export default function HomePage({ navigation }) {
+  const { loading, error, data } = useQuery(GET_POSTS);
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>{error.message}</Text>
+      </View>
+    );
+  }
   return (
     <>
       <View style={styles.posts}>
         <FlatList
-          data={data}
+          data={data.posts}
           keyExtractor={(post) => post.id}
           renderItem={(info) => {
             const { item } = info;
@@ -29,7 +71,7 @@ export default function HomePage({ navigation }) {
                       fontWeight: "600",
                     }}
                   >
-                    User 1
+                    {item.author.username}
                   </Text>
                   <TouchableOpacity
                     onPress={() => {
@@ -54,6 +96,9 @@ export default function HomePage({ navigation }) {
                       />
                     </View>
                   </TouchableOpacity>
+                  <View>
+                    <Text>{item.tags}</Text>
+                  </View>
                   <View
                     style={{
                       flexDirection: "row",
@@ -68,7 +113,7 @@ export default function HomePage({ navigation }) {
                         color: "gray",
                       }}
                     >
-                      100 likes
+                      {item.likes.length} likes
                     </Text>
                     <Text
                       style={{
@@ -77,7 +122,7 @@ export default function HomePage({ navigation }) {
                         color: "gray",
                       }}
                     >
-                      7 comments
+                      {item.comments.length} comments
                     </Text>
                   </View>
                   <View

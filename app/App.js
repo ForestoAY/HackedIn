@@ -11,6 +11,8 @@ import AddPost from "./pages/AddPost";
 import DetailPage from "./pages/DetailPage";
 import SearchPage from "./pages/SearchPage";
 import ProfilePage from "./pages/ProfilePage";
+import { ApolloProvider } from "@apollo/client";
+import apolloClient from "./config/apolloClient";
 
 const logo = require("./assets/hacktiv8.png");
 const Stack = createStackNavigator();
@@ -102,38 +104,40 @@ function HomeTabs() {
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={{ height: "100%" }}>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen
-              name="HomeStack"
-              component={HomeTabs}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Add"
-              component={AddPost}
-              options={{
-                headerStyle: { backgroundColor: "#83B4FF" },
-                headerTintColor: "#fff",
-                headerTitleStyle: { fontWeight: "bold" },
-              }}
-            />
-            <Stack.Screen
-              name="Detail"
-              component={DetailPage}
-              options={{
-                headerStyle: { backgroundColor: "#83B4FF" },
-                headerTintColor: "#fff",
-                headerTitleStyle: { fontWeight: "bold" },
-              }}
-            />
-            {/* <LoginPage /> */}
-            {/* <RegisterPage /> */}
-          </Stack.Navigator>
-        </NavigationContainer>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <ApolloProvider client={apolloClient}>
+      <SafeAreaProvider>
+        <SafeAreaView style={{ height: "100%" }}>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="HomeStack"
+                component={HomeTabs}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Add"
+                component={AddPost}
+                options={{
+                  headerStyle: { backgroundColor: "#83B4FF" },
+                  headerTintColor: "#fff",
+                  headerTitleStyle: { fontWeight: "bold" },
+                }}
+              />
+              <Stack.Screen
+                name="Detail"
+                component={DetailPage}
+                options={{
+                  headerStyle: { backgroundColor: "#83B4FF" },
+                  headerTintColor: "#fff",
+                  headerTitleStyle: { fontWeight: "bold" },
+                }}
+              />
+              {/* <LoginPage /> */}
+              {/* <RegisterPage /> */}
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </ApolloProvider>
   );
 }
