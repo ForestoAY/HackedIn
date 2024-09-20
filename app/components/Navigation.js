@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/auth";
 import { NavigationContainer } from "@react-navigation/native";
 import { Image, Text, TouchableOpacity, View } from "react-native";
@@ -105,13 +105,20 @@ function HomeTabs() {
 export default function Navigation() {
   const authContext = useContext(AuthContext);
 
+  const [ready, setReady] = useState(false);
+
   useEffect(() => {
     getItemAsync("access_token").then((data) => {
       if (data) {
         authContext.setIsSignedIn(true);
       }
+      setReady(true);
     });
   });
+
+  if (!ready) {
+    return null;
+  }
 
   return (
     <NavigationContainer>
