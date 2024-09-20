@@ -46,8 +46,6 @@ const userResolvers = {
     user: async (_, args, contextValue) => {
       await contextValue.auth();
       const response = await User.getUserWithFollow(args._id);
-      console.log(response, "<<< response di resolver");
-
       return response;
     },
     search: async (_, args, contextValue) => {

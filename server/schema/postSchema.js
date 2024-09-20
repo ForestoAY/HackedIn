@@ -22,6 +22,7 @@ const postTypeDefs = `#graphql
   }
 
   type Comment {
+    _id: ID
     content: String!
     username: String!
     createdAt: String
@@ -29,6 +30,7 @@ const postTypeDefs = `#graphql
   }
 
   type Like {
+    _id: ID
     username: String!
     createdAt: String
     updatedAt: String
@@ -42,11 +44,13 @@ const postTypeDefs = `#graphql
   }
 
   input CommentForm {
+    _id: ID
     content: String
     username: String
   }
 
   input LikeForm {
+    _id: ID
     username: String
   }
 
@@ -105,15 +109,16 @@ const postResolvers = {
     addComment: async (_, args, contextValue) => {
       const user = await contextValue.auth();
       const { postId } = args;
-      let { content, username } = args.newComment;
+      let { content, username, _id } = args.newComment;
 
       if (!content) {
         throw new Error("Content is required");
       }
 
       username = user.username;
+      _id = user._id;
 
-      await Post.addComment(postId, { content, username });
+      await Post.addComment(postId, { content, username, _id });
       await redis.del("posts");
       const updatedPost = await Post.getPostById(postId);
       return updatedPost;
@@ -122,10 +127,11 @@ const postResolvers = {
       const user = await contextValue.auth();
 
       const { postId } = args;
-
+      let { _id, username } = args.newLike;
+      _id = user._id;
       username = user.username;
 
-      await Post.addLike(postId, { username });
+      await Post.addLike(postId, { username, _id });
       await redis.del("posts");
       const updatedPost = await Post.getPostById(postId);
       return updatedPost;
