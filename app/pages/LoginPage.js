@@ -58,7 +58,7 @@ export default function LoginPage({ navigation }) {
                 "access_token",
                 data.login.access_token
               );
-              
+
               authContext.setIsSignedIn(true);
               console.log(authContext);
             } catch (error) {
@@ -72,7 +72,16 @@ export default function LoginPage({ navigation }) {
         </TouchableOpacity>
       </View>
       <Text style={styles.footerText}>
-        Don't Have Account?<Text style={styles.signup}> Sign Up</Text>
+        Don't Have Account?
+        <Text
+          style={styles.signup}
+          onPress={() => {
+            navigation.navigate("Register");
+          }}
+        >
+          {" "}
+          Sign Up
+        </Text>
       </Text>
     </View>
   );

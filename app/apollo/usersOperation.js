@@ -7,3 +7,14 @@ export const LOGIN = gql`
     }
   }
 `;
+
+export const REGISTER = gql`
+  mutation Register($newUser: UserForm) {
+    register(newUser: $newUser) {
+      _id
+      username
+      email
+      name
+    }
+  }
+`;

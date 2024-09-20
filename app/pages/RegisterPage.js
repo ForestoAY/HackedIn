@@ -1,3 +1,5 @@
+import { useMutation } from "@apollo/client";
+import { useState } from "react";
 import {
   Image,
   StyleSheet,
@@ -6,9 +8,26 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { REGISTER } from "../apollo/usersOperation";
 const logo = require("../assets/hacktiv8.png");
 
-export default function RegisterPage() {
+export default function RegisterPage({ navigation }) {
+  const [form, setForm] = useState({
+    name: "account",
+    username: "testing account",
+    email: "testing@mail.com",
+    password: "12121212",
+  });
+
+  const [register, { loading, error, data }] = useMutation(REGISTER);
+
+  const handleChange = (name, value) => {
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Image source={logo} style={styles.image} resizeMode="contain" />
@@ -19,18 +38,24 @@ export default function RegisterPage() {
           placeholder="Username"
           autoCorrect={false}
           autoCapitalize="none"
+          onChangeText={(value) => handleChange("username", value)}
+          value={form.username}
         />
         <TextInput
           style={styles.input}
           placeholder="Email"
           autoCorrect={false}
           autoCapitalize="none"
+          onChangeText={(value) => handleChange("email", value)}
+          value={form.email}
         />
         <TextInput
           style={styles.input}
           placeholder="Name"
           autoCorrect={false}
           autoCapitalize="none"
+          onChangeText={(value) => handleChange("name", value)}
+          value={form.name}
         />
         <TextInput
           style={styles.input}
@@ -38,15 +63,38 @@ export default function RegisterPage() {
           secureTextEntry
           autoCorrect={false}
           autoCapitalize="none"
+          onChangeText={(value) => handleChange("password", value)}
+          value={form.password}
         />
       </View>
       <View style={styles.buttonView}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => {
+            await register({
+              variables: {
+                newUser: {
+                  ...form,
+                },
+              },
+            });
+            navigation.navigate("Login");
+          }}
+        >
           <Text style={styles.buttonText}>REGISTER</Text>
         </TouchableOpacity>
       </View>
       <Text style={styles.footerText}>
-        Have Account?<Text style={styles.signup}> Login</Text>
+        Have Account?
+        <Text
+          style={styles.signup}
+          onPress={() => {
+            navigation.navigate("Login");
+          }}
+        >
+          {" "}
+          Login
+        </Text>
       </Text>
     </View>
   );
