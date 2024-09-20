@@ -1,10 +1,36 @@
+import React, { useContext } from "react";
 import { deleteItemAsync } from "expo-secure-store";
-import { useContext } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { useQuery } from "@apollo/client";
 import { AuthContext } from "../context/auth";
+import { FIND_BY_USERNAME } from "../apollo/usersOperation";
 
-export default function ProfilePage() {
+export default function ProfilePage({ route }) {
   const authContext = useContext(AuthContext);
+  const { username } = route.params;
+
+  const { loading, error, data } = useQuery(FIND_BY_USERNAME, {
+    variables: { username: username },
+  });
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Error: {error.message}</Text>
+      </View>
+    );
+  }
+
+  const { findByUsername: user } = data;
+
   return (
     <View>
       <Text
@@ -15,7 +41,7 @@ export default function ProfilePage() {
           fontWeight: "600",
         }}
       >
-        User 2358
+        {user.username}
       </Text>
       <TouchableOpacity
         style={{
@@ -46,8 +72,22 @@ export default function ProfilePage() {
           alignItems: "flex-end",
         }}
       >
-        <Text style={{ fontSize: 18, fontWeight: "600" }}>999 </Text>
-        <Text style={{ fontSize: 16, fontWeight: "300" }}>connections</Text>
+        <Text style={{ fontSize: 18, fontWeight: "600" }}>
+          {user.followers ? user.followers.length : 0}
+        </Text>
+        <Text style={{ fontSize: 16, fontWeight: "300" }}>followers</Text>
+      </View>
+      <View
+        style={{
+          marginHorizontal: 12,
+          flexDirection: "row",
+          alignItems: "flex-end",
+        }}
+      >
+        <Text style={{ fontSize: 18, fontWeight: "600" }}>
+          {user.following ? user.following.length : 0}
+        </Text>
+        <Text style={{ fontSize: 16, fontWeight: "300" }}>following</Text>
       </View>
       <View>
         <TouchableOpacity
@@ -66,7 +106,7 @@ export default function ProfilePage() {
             authContext.setIsSignedIn(false);
           }}
         >
-          <Text>Logout</Text>
+          <Text style={{ color: "white" }}>Logout</Text>
         </TouchableOpacity>
       </View>
     </View>

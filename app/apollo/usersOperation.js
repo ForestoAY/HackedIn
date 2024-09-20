@@ -29,3 +29,29 @@ export const SEARCH_USERS = gql`
     }
   }
 `;
+
+export const FIND_BY_USERNAME = gql`
+  query findByUsername($username: String!) {
+    findByUsername(username: $username) {
+      _id
+      name
+      username
+      email
+      password
+      following {
+        _id
+        followingId
+        followerId
+        createdAt
+        updatedAt
+      }
+      followers {
+        _id
+        followingId
+        followerId
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;

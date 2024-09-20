@@ -46,6 +46,11 @@ export default function HomePage({ navigation }) {
                       paddingHorizontal: 12,
                       fontWeight: "600",
                     }}
+                    onPress={() => {
+                      navigation.push("ProfilePage", {
+                        username: item.author.username,
+                      });
+                    }}
                   >
                     {item.author.username}
                   </Text>

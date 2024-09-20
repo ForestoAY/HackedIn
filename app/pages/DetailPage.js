@@ -186,6 +186,11 @@ export default function DetailPage({ navigation, route }) {
                   paddingHorizontal: 12,
                   fontWeight: "600",
                 }}
+                onPress={() => {
+                  navigation.push("ProfilePage", {
+                    username: item.username,
+                  });
+                }}
               >
                 {item.username}
               </Text>

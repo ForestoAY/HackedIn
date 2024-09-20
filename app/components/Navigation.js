@@ -89,7 +89,7 @@ function HomeTabs() {
           headerTitleStyle: { fontWeight: "bold" },
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Profile"
         component={ProfilePage}
         options={{
@@ -97,7 +97,7 @@ function HomeTabs() {
           headerTintColor: "#fff",
           headerTitleStyle: { fontWeight: "bold" },
         }}
-      />
+      /> */}
     </Tab.Navigator>
   );
 }
@@ -114,7 +114,7 @@ export default function Navigation() {
       }
       setReady(true);
     });
-  });
+  }, []);
 
   if (!ready) {
     return null;
@@ -133,6 +133,15 @@ export default function Navigation() {
             <Stack.Screen
               name="Add"
               component={AddPost}
+              options={{
+                headerStyle: { backgroundColor: "#83B4FF" },
+                headerTintColor: "#fff",
+                headerTitleStyle: { fontWeight: "bold" },
+              }}
+            />
+            <Stack.Screen
+              name="ProfilePage"
+              component={ProfilePage}
               options={{
                 headerStyle: { backgroundColor: "#83B4FF" },
                 headerTintColor: "#fff",

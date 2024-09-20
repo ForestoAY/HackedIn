@@ -27,6 +27,22 @@ export default function AddPost({ navigation }) {
     });
   };
 
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>{error.message}</Text>
+      </View>
+    );
+  }
+
   return (
     <>
       <View></View>
