@@ -57,7 +57,7 @@ export default function HomePage({ navigation }) {
       <View style={styles.posts}>
         <FlatList
           data={data.posts}
-          keyExtractor={(post) => post.id}
+          keyExtractor={(post) => post._id}
           renderItem={(info) => {
             const { item } = info;
             return (
@@ -76,7 +76,7 @@ export default function HomePage({ navigation }) {
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate("Detail", {
-                        post: item,
+                        postId: item._id,
                       });
                     }}
                   >

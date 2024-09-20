@@ -1,8 +1,63 @@
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useQuery, gql } from "@apollo/client";
 
+const GET_POST = gql`
+  query Post($id: String!) {
+    post(_id: $id) {
+      _id
+      content
+      tags
+      imgUrl
+      authorId
+      comments {
+        content
+        username
+        createdAt
+        updatedAt
+      }
+      likes {
+        username
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      author {
+        _id
+        username
+      }
+    }
+  }
+`;
 export default function DetailPage({ navigation, route }) {
-  const { post } = route.params;
+  const { postId } = route.params;
+
+  const { loading, error, data } = useQuery(GET_POST, {
+    variables: { id: postId },
+  });
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>{error.message}</Text>
+      </View>
+    );
+  }
   return (
     <>
       <View style={{ backgroundColor: "white", marginVertical: 16 }}>
@@ -15,7 +70,7 @@ export default function DetailPage({ navigation, route }) {
               fontWeight: "600",
             }}
           >
-            User 1
+            {data.post.author.username}
           </Text>
           <Text
             style={{
@@ -24,12 +79,23 @@ export default function DetailPage({ navigation, route }) {
               paddingHorizontal: 12,
             }}
           >
-            {post.content}
+            {data.post.content}
           </Text>
           <Image
-            source={{ uri: post.imgUrl }}
+            source={{ uri: data.post.imgUrl }}
             style={{ width: "100%", height: 400 }}
           />
+        </View>
+        <View>
+          <Text
+            style={{
+              fontSize: 16,
+              marginBottom: 8,
+              paddingHorizontal: 12,
+            }}
+          >
+            {data.post.tags}
+          </Text>
         </View>
         <View
           style={{
@@ -45,7 +111,7 @@ export default function DetailPage({ navigation, route }) {
               color: "gray",
             }}
           >
-            100 likes
+            {data.post.likes.length} likes
           </Text>
           <Text
             style={{
@@ -54,7 +120,7 @@ export default function DetailPage({ navigation, route }) {
               color: "gray",
             }}
           >
-            7 comments
+            {data.post.comments.length} comments
           </Text>
         </View>
         <View
@@ -83,7 +149,7 @@ export default function DetailPage({ navigation, route }) {
         </View>
       </View>
       {/* Section Komentar */}
-      <View>
+      <View style={{ flex: 1 }}>
         {/* Komentar 1 */}
         <View style={{ marginVertical: 8 }}>
           <Text
@@ -131,7 +197,7 @@ export default function DetailPage({ navigation, route }) {
           </Text>
         </View>
       </View>
-      {/* Go back button */}
+      {/* Go back button
       <View
         style={{
           width: "100%",
@@ -153,7 +219,7 @@ export default function DetailPage({ navigation, route }) {
             Go Back
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </>
   );
 }
