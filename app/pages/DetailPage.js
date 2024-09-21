@@ -17,12 +17,21 @@ export default function DetailPage({ navigation, route }) {
   const { postId } = route.params;
   const authContext = useContext(AuthContext);
   const [showCommentForm, setShowCommentForm] = useState(false);
-  const [newComment, setNewComment] = useState("");
+  const [newComment, setNewComment] = useState({
+    content: "",
+  });
   const [isLiked, setIsLiked] = useState(false);
 
   const { loading, error, data } = useQuery(GET_POST, {
     variables: { id: postId },
   });
+
+  const handleCommentChange = (name, value) => {
+    setNewComment({
+      ...newComment,
+      [name]: value,
+    });
+  };
 
   const [addComment] = useMutation(ADD_COMMENT, {
     refetchQueries: [{ query: GET_POST, variables: { id: postId } }],
@@ -39,22 +48,15 @@ export default function DetailPage({ navigation, route }) {
     }
   }, [data]);
 
-  const handleAddComment = () => {
-    if (newComment.trim() === "") return;
-
-    addComment({
+  const handleAddComment = async () => {
+    await addComment({
       variables: {
         postId: postId,
-        newComment: { content: newComment },
+        newComment: { content: newComment.content },
       },
-    })
-      .then(() => {
-        setNewComment("");
-        setShowCommentForm(false);
-      })
-      .catch((err) => {
-        console.error("Error adding comment:", err);
-      });
+    });
+    setNewComment({ content: "" });
+    setShowCommentForm(false);
   };
 
   const handleAddLike = () => {
@@ -129,22 +131,10 @@ export default function DetailPage({ navigation, route }) {
             justifyContent: "space-between",
           }}
         >
-          <Text
-            style={{
-              marginHorizontal: 8,
-              fontSize: 16,
-              color: "gray",
-            }}
-          >
+          <Text style={{ marginHorizontal: 8, fontSize: 16, color: "gray" }}>
             {data.post.likes.length} likes
           </Text>
-          <Text
-            style={{
-              marginHorizontal: 8,
-              fontSize: 16,
-              color: "gray",
-            }}
-          >
+          <Text style={{ marginHorizontal: 8, fontSize: 16, color: "gray" }}>
             {data.post.comments.length} comments
           </Text>
         </View>
@@ -180,8 +170,8 @@ export default function DetailPage({ navigation, route }) {
       {showCommentForm && (
         <View style={{ paddingHorizontal: 16, marginVertical: 8 }}>
           <TextInput
-            value={newComment}
-            onChangeText={(text) => setNewComment(text)}
+            value={newComment.content}
+            onChangeText={(value) => handleCommentChange("content", value)}
             placeholder="Add a comment"
             style={{
               borderColor: "gray",
@@ -210,39 +200,36 @@ export default function DetailPage({ navigation, route }) {
 
       <FlatList
         data={data.post.comments}
-        renderItem={(info) => {
-          const { item } = info;
-          return (
-            <View style={{ marginVertical: 8 }}>
-              <Text
-                style={{
-                  fontSize: 20,
-                  marginBottom: 8,
-                  paddingHorizontal: 12,
-                  fontWeight: "600",
-                }}
-                onPress={() => {
-                  navigation.push("ProfilePage", {
-                    id: item._id,
-                  });
-                }}
-              >
-                {item.username}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 16,
-                  marginBottom: 8,
-                  paddingHorizontal: 12,
-                  fontWeight: "300",
-                }}
-              >
-                {item.content}
-              </Text>
-            </View>
-          );
-        }}
-        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <View style={{ marginVertical: 8 }}>
+            <Text
+              style={{
+                fontSize: 20,
+                marginBottom: 8,
+                paddingHorizontal: 12,
+                fontWeight: "600",
+              }}
+              onPress={() => {
+                navigation.push("ProfilePage", {
+                  id: item._id,
+                });
+              }}
+            >
+              {item.username}
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                marginBottom: 8,
+                paddingHorizontal: 12,
+                fontWeight: "300",
+              }}
+            >
+              {item.content}
+            </Text>
+          </View>
+        )}
+        keyExtractor={(item, index) => index.toString()} // Use unique ID as key
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }}
         ListEmptyComponent={
           <Text style={{ textAlign: "center", marginTop: 20 }}>
