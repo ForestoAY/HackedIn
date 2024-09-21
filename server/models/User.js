@@ -44,7 +44,7 @@ class User {
         .aggregate([
           {
             $match: {
-              followerId: new ObjectId(id),
+              followingId: new ObjectId(id),
             },
           },
           {
@@ -68,7 +68,7 @@ class User {
         .aggregate([
           {
             $match: {
-              followingId: new ObjectId(id),
+              followerId: new ObjectId(id),
             },
           },
           {
@@ -88,11 +88,6 @@ class User {
         ])
         .toArray(),
     ]);
-
-    console.log(user, "<<< promise user");
-    console.log(followers, "<<< followers");
-    console.log(followings, "<<< followings");
-
     return {
       user,
       followers,

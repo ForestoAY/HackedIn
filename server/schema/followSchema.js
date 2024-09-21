@@ -22,7 +22,7 @@ const followResolvers = {
       const { followingId } = args;
       const { _id: followerId } = user;
 
-      if (followingId === followerId.toString()) {
+      if (followerId.toString() === followingId.toString()) {
         throw new Error("You can't follow yourself");
       }
 

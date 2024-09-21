@@ -21,6 +21,7 @@ const userTypeDefs = `#graphql
 
   type LoginResponse {
     access_token: String!
+    user: User
   }
 
   input UserForm {
@@ -106,7 +107,6 @@ const userResolvers = {
       if (!user) {
         throw new Error("Invalid username/password");
       }
-
       const isValidPassword = await comparePassword(password, user.password);
       if (!isValidPassword) {
         throw new Error("Invalid username/password");
@@ -116,7 +116,15 @@ const userResolvers = {
         username: user.username,
       });
 
-      return { access_token };
+      return {
+        access_token,
+        user: {
+          _id: user._id,
+          name: user.name,
+          username: user.username,
+          email: user.email,
+        },
+      };
     },
   },
 };
