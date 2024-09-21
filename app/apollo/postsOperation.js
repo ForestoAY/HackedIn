@@ -100,3 +100,30 @@ export const ADD_COMMENT = gql`
     }
   }
 `;
+
+export const ADD_LIKE = gql`
+  mutation AddLike($postId: String!, $newLike: LikeForm) {
+    addLike(postId: $postId, newLike: $newLike) {
+      _id
+      content
+      imgUrl
+      tags
+      authorId
+      comments {
+        content
+        username
+        createdAt
+        updatedAt
+        _id
+      }
+      likes {
+        username
+        createdAt
+        updatedAt
+        _id
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;

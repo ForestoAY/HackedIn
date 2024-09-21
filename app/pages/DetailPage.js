@@ -9,13 +9,16 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_POST, ADD_COMMENT } from "../apollo/postsOperation";
-import { useState } from "react";
+import { GET_POST, ADD_COMMENT, ADD_LIKE } from "../apollo/postsOperation";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context/auth";
 
 export default function DetailPage({ navigation, route }) {
   const { postId } = route.params;
+  const authContext = useContext(AuthContext);
   const [showCommentForm, setShowCommentForm] = useState(false);
   const [newComment, setNewComment] = useState("");
+  const [isLiked, setIsLiked] = useState(false);
 
   const { loading, error, data } = useQuery(GET_POST, {
     variables: { id: postId },
@@ -24,6 +27,17 @@ export default function DetailPage({ navigation, route }) {
   const [addComment] = useMutation(ADD_COMMENT, {
     refetchQueries: [{ query: GET_POST, variables: { id: postId } }],
   });
+
+  const [addLike] = useMutation(ADD_LIKE, {
+    refetchQueries: [{ query: GET_POST, variables: { id: postId } }],
+  });
+
+  useEffect(() => {
+    if (data) {
+      const likes = data.post.likes;
+      setIsLiked(likes.some((like) => like._id === authContext.user?._id));
+    }
+  }, [data]);
 
   const handleAddComment = () => {
     if (newComment.trim() === "") return;
@@ -39,7 +53,22 @@ export default function DetailPage({ navigation, route }) {
         setShowCommentForm(false);
       })
       .catch((err) => {
-        console.error("Error menambahkan komentar:", err);
+        console.error("Error adding comment:", err);
+      });
+  };
+
+  const handleAddLike = () => {
+    addLike({
+      variables: {
+        postId: postId,
+        newLike: {},
+      },
+    })
+      .then(() => {
+        setIsLiked(!isLiked);
+      })
+      .catch((err) => {
+        console.error("Error adding like:", err);
       });
   };
 
@@ -58,6 +87,7 @@ export default function DetailPage({ navigation, route }) {
       </View>
     );
   }
+
   return (
     <>
       <View style={{ backgroundColor: "white", marginVertical: 16 }}>
@@ -70,8 +100,6 @@ export default function DetailPage({ navigation, route }) {
               fontWeight: "600",
             }}
             onPress={() => {
-              console.log(data.post.author._id);
-              
               navigation.push("ProfilePage", {
                 id: data.post.author._id,
               });
@@ -128,9 +156,9 @@ export default function DetailPage({ navigation, route }) {
             paddingBottom: 8,
           }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleAddLike}>
             <Icon
-              name="thumbs-o-up"
+              name={isLiked ? "thumbs-up" : "thumbs-o-up"}
               size={32}
               color="black"
               style={{ marginHorizontal: 8 }}
@@ -194,8 +222,6 @@ export default function DetailPage({ navigation, route }) {
                   fontWeight: "600",
                 }}
                 onPress={() => {
-                  console.log(item._id, "<< di comment");
-                  
                   navigation.push("ProfilePage", {
                     id: item._id,
                   });
