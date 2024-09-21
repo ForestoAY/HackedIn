@@ -8,50 +8,96 @@ import {
   View,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useMutation, useQuery } from "@apollo/client";
-import { GET_POST, ADD_COMMENT, ADD_LIKE } from "../apollo/postsOperation";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { ADD_COMMENT, ADD_LIKE } from "../apollo/postsOperation";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/auth";
+
+const GET_POST = gql`
+  query Post($id: String!) {
+    post(_id: $id) {
+      _id
+      content
+      tags
+      imgUrl
+      authorId
+      comments {
+        _id
+        content
+        username
+        createdAt
+        updatedAt
+      }
+      likes {
+        _id
+        username
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      author {
+        _id
+        username
+      }
+    }
+  }
+`;
 
 export default function DetailPage({ navigation, route }) {
   const { postId } = route.params;
   const authContext = useContext(AuthContext);
   const [showCommentForm, setShowCommentForm] = useState(false);
   const [newComment, setNewComment] = useState({ content: "" });
+  const [comments, setComments] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
 
-  const { loading, error, data } = useQuery(GET_POST, {
+  const { data, loading, error } = useQuery(GET_POST, {
     variables: { id: postId },
-  });
-
-  const handleCommentChange = (name, value) => {
-    setNewComment({ ...newComment, [name]: value });
-  };
-
-  const [addComment] = useMutation(ADD_COMMENT, {
-    refetchQueries: [{ query: GET_POST, variables: { id: postId } }],
-  });
-
-  const [addLike] = useMutation(ADD_LIKE, {
-    refetchQueries: [{ query: GET_POST, variables: { id: postId } }],
+    fetchPolicy: "cache-first",
+    onCompleted: (data) => {
+      if (data) {
+        setComments(data.post.comments);
+        const likes = data.post.likes;
+        setIsLiked(likes.some((like) => like._id === authContext.user?._id));
+      }
+    },
   });
 
   useEffect(() => {
     if (data) {
+      setComments(data.post.comments);
       const likes = data.post.likes;
       setIsLiked(likes.some((like) => like._id === authContext.user?._id));
     }
   }, [data]);
 
+  const handleCommentChange = (name, value) => {
+    setNewComment({ [name]: value });
+  };
+
+  const [addComment] = useMutation(ADD_COMMENT, {
+    refetchQueries: [GET_POST],
+  });
+
+  const [addLike] = useMutation(ADD_LIKE, {
+    refetchQueries: [GET_POST],
+  });
+
   const handleAddComment = async () => {
-    await addComment({
-      variables: {
-        postId: postId,
-        newComment: { content: newComment.content },
-      },
-    });
-    setNewComment({ content: "" });
-    setShowCommentForm(false);
+    try {
+      const response = await addComment({
+        variables: {
+          postId: postId,
+          newComment: { content: newComment.content },
+        },
+      });
+      setComments(response.data.addComment.comments);
+      setNewComment({ content: "" });
+      setShowCommentForm(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleAddLike = () => {
@@ -62,7 +108,7 @@ export default function DetailPage({ navigation, route }) {
         setIsLiked(!isLiked);
       })
       .catch((err) => {
-        console.error("Error adding like:", err);
+        console.log("Error adding like:", err);
       });
   };
 
@@ -98,9 +144,7 @@ export default function DetailPage({ navigation, route }) {
 
         <View style={styles.infoContainer}>
           <Text style={styles.infoText}>{data.post.likes.length} likes</Text>
-          <Text style={styles.infoText}>
-            {data.post.comments.length} comments
-          </Text>
+          <Text style={styles.infoText}>{comments.length} comments</Text>
         </View>
 
         <View style={styles.actionContainer}>
@@ -143,7 +187,7 @@ export default function DetailPage({ navigation, route }) {
       )}
 
       <FlatList
-        data={data.post.comments}
+        data={comments}
         renderItem={({ item }) => (
           <View style={styles.commentContainer}>
             <Text

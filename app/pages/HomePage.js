@@ -15,7 +15,9 @@ import { AuthContext } from "../context/auth";
 
 export default function HomePage({ navigation }) {
   const authContext = useContext(AuthContext);
-  const { loading, error, data } = useQuery(GET_POSTS);
+  const { loading, error, data } = useQuery(GET_POSTS, {
+    fetchPolicy: "no-cache",
+  });
   const [likedPosts, setLikedPosts] = useState({});
 
   const [addLike] = useMutation(ADD_LIKE, {
