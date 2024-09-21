@@ -55,6 +55,7 @@ export default function SearchPage({ navigation }) {
           borderColor: "#83B4FF",
           borderWidth: 1,
           borderRadius: 7,
+          fontSize: 18,
         }}
         placeholder="Search users"
         autoCorrect={false}

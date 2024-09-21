@@ -9,7 +9,9 @@ export default function ProfilePage({ route }) {
   const authContext = useContext(AuthContext);
   const { id } = route.params;
   const { loading, error, data, refetch } = useQuery(USER, {
-    variables: { id: id },
+    variables: { id },
+    skip: !id,
+    fetchPolicy: "network-only",
   });
 
   const [isFollowing, setIsFollowing] = useState(false);
@@ -40,7 +42,9 @@ export default function ProfilePage({ route }) {
       });
 
       if (followData?.followUser) {
-        setIsFollowing(!isFollowing);
+        // Set isFollowing sesuai dengan hasil follow
+        setIsFollowing(true);
+        refetch(); // Refetch untuk mendapatkan data terbaru
       }
     } catch (error) {
       Alert.alert("Error", error.message);

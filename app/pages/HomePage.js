@@ -37,107 +37,69 @@ export default function HomePage({ navigation }) {
           renderItem={(info) => {
             const { item } = info;
             return (
-              <>
-                <View style={{ backgroundColor: "white", marginBottom: 32 }}>
-                  <Text
-                    style={{
-                      fontSize: 24,
-                      marginBottom: 8,
-                      paddingHorizontal: 12,
-                      fontWeight: "600",
-                    }}
-                    onPress={() => {
-                      navigation.push("ProfilePage", {
-                        id: item.author._id,
-                      });
-                    }}
-                  >
-                    {item.author.username}
+              <View style={styles.postContainer}>
+                <Text
+                  style={styles.username}
+                  onPress={() => {
+                    navigation.push("ProfilePage", {
+                      id: item.author._id,
+                    });
+                  }}
+                >
+                  {item.author.username}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.push("Detail", {
+                      postId: item._id,
+                    });
+                  }}
+                >
+                  <View>
+                    <Text style={styles.content}>{item.content}</Text>
+                    <Image source={{ uri: item.imgUrl }} style={styles.image} />
+                  </View>
+                </TouchableOpacity>
+
+                <View style={styles.tagContainer}>
+                  {item.tags.map((tag, index) => (
+                    <TouchableOpacity key={index} style={styles.tagButton}>
+                      <Text style={styles.tagText}>{tag}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                <View style={styles.infoContainer}>
+                  <Text style={styles.infoText}>{item.likes.length} likes</Text>
+                  <Text style={styles.infoText}>
+                    {item.comments.length} comments
                   </Text>
+                </View>
+                <View style={styles.actionContainer}>
+                  <TouchableOpacity>
+                    <Icon
+                      name="thumbs-o-up"
+                      size={32}
+                      color="black"
+                      style={styles.icon}
+                    />
+                  </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.push("Detail", {
+                      navigation.navigate("Detail", {
                         postId: item._id,
                       });
                     }}
                   >
-                    <View>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          marginBottom: 8,
-                          paddingHorizontal: 12,
-                        }}
-                      >
-                        {item.content}
-                      </Text>
-                      <Image
-                        source={{ uri: item.imgUrl }}
-                        style={{ width: "100%", height: 400 }}
-                      />
-                    </View>
+                    <Icon
+                      name="comment-o"
+                      size={32}
+                      color="black"
+                      style={styles.icon}
+                    />
                   </TouchableOpacity>
-                  <View>
-                    <Text>{item.tags}</Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      marginVertical: 4,
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        marginHorizontal: 8,
-                        fontSize: 16,
-                        color: "gray",
-                      }}
-                    >
-                      {item.likes.length} likes
-                    </Text>
-                    <Text
-                      style={{
-                        marginHorizontal: 8,
-                        fontSize: 16,
-                        color: "gray",
-                      }}
-                    >
-                      {item.comments.length} comments
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      marginVertical: 4,
-                      paddingBottom: 8,
-                    }}
-                  >
-                    <TouchableOpacity>
-                      <Icon
-                        name="thumbs-o-up"
-                        size={32}
-                        color="black"
-                        style={{ marginHorizontal: 8 }}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate("Detail", {
-                          postId: item._id,
-                        });
-                      }}
-                    >
-                      <Icon
-                        name="comment-o"
-                        size={32}
-                        color="black"
-                        style={{ marginHorizontal: 8 }}
-                      />
-                    </TouchableOpacity>
-                  </View>
                 </View>
-              </>
+              </View>
             );
           }}
         />
@@ -147,15 +109,61 @@ export default function HomePage({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  navbar: {
-    height: 72,
-    backgroundColor: "#83B4FF",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
   posts: {
     flex: 1,
+    marginHorizontal: 12,
     backgroundColor: "lightgray",
+  },
+  postContainer: {
+    backgroundColor: "white",
+    marginBottom: 32,
+    borderRadius: 10,
+    padding: 12,
+  },
+  username: {
+    fontSize: 24,
+    marginBottom: 8,
+    fontWeight: "600",
+  },
+  content: {
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  image: {
+    width: "100%",
+    height: 400,
+    borderRadius: 10,
+  },
+  tagContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginVertical: 8,
+  },
+  tagButton: {
+    backgroundColor: "#e0e0e0",
+    borderRadius: 20,
+    padding: 8,
+    margin: 4,
+  },
+  tagText: {
+    color: "black",
+  },
+  infoContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: 4,
+  },
+  infoText: {
+    marginHorizontal: 8,
+    fontSize: 16,
+    color: "gray",
+  },
+  actionContainer: {
+    flexDirection: "row",
+    marginVertical: 4,
+    paddingBottom: 8,
+  },
+  icon: {
+    marginHorizontal: 8,
   },
 });
