@@ -110,33 +110,6 @@ export default function SearchPage({ navigation }) {
                 {item.name}
               </Text>
             </View>
-            <TouchableOpacity
-              style={{
-                flexDirection: "row",
-                backgroundColor: "#83B4FF",
-                borderRadius: 5,
-                height: 30,
-                alignItems: "center",
-              }}
-              onPress={() => handleFollow(item._id)} // Pass the ID of the user to follow
-            >
-              <Icon
-                name="plus"
-                size={20}
-                color="white"
-                style={{ marginHorizontal: 4, marginStart: 4 }}
-              />
-              <Text
-                style={{
-                  color: "white",
-                  fontSize: 18,
-                  fontWeight: "bold",
-                  marginEnd: 8,
-                }}
-              >
-                Follow
-              </Text>
-            </TouchableOpacity>
           </View>
         )}
       />
