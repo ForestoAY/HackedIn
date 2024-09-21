@@ -25,16 +25,12 @@ export default function HomePage({ navigation }) {
   useEffect(() => {
     if (data) {
       const newLikedPosts = {};
-      console.log(authContext.user?._id);
-
       data.posts.forEach((post) => {
         const likes = post.likes;
         newLikedPosts[post._id] = likes.some(
           (like) => like._id === authContext.user?._id
         );
       });
-      console.log(newLikedPosts, "🍕🍕");
-
       setLikedPosts(newLikedPosts);
     }
   }, [data, authContext.user?._id]);
