@@ -3,7 +3,7 @@ const db = require("../config/mongodb");
 
 class Post {
   static async getPosts() {
-    return db
+    return await db
       .collection("Posts")
       .aggregate([
         {
@@ -82,18 +82,19 @@ class Post {
   static async addComment(postId, comment) {
     comment.createdAt = new Date();
     comment.updatedAt = new Date();
-    return db
+    return await db
       .collection("Posts")
-      .updateOne(
+      .findOneAndUpdate(
         { _id: new ObjectId(postId) },
-        { $push: { comments: comment }, $set: { updatedAt: new Date() } }
+        { $push: { comments: comment }, $set: { updatedAt: new Date() } },
+        { returnDocument: "after" }
       );
   }
 
   static async addLike(postId, like) {
     like.createdAt = new Date();
     like.updatedAt = new Date();
-    return db
+    return await db
       .collection("Posts")
       .updateOne(
         { _id: new ObjectId(postId) },
@@ -102,7 +103,7 @@ class Post {
   }
 
   static async removeLike(postId, like) {
-    return db.collection("Posts").updateOne(
+    return await db.collection("Posts").updateOne(
       { _id: new ObjectId(postId) },
       {
         $pull: { likes: { _id: like._id } },
