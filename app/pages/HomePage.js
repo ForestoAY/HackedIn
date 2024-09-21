@@ -58,6 +58,7 @@ export default function HomePage({ navigation }) {
   return (
     <View style={styles.posts}>
       <FlatList
+        style={{ marginHorizontal: 12 }}
         data={data.posts}
         keyExtractor={(post) => post._id}
         renderItem={({ item }) => {
@@ -144,7 +145,7 @@ export default function HomePage({ navigation }) {
 const styles = StyleSheet.create({
   posts: {
     flex: 1,
-    marginHorizontal: 12,
+
     backgroundColor: "lightgray",
   },
   postContainer: {
