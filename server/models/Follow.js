@@ -11,6 +11,21 @@ class Follow {
     });
   }
 
+  static async removeFollow(followingId, followerId) {
+    return await db.collection("Follow").deleteOne({
+      followingId: new ObjectId(followingId),
+      followerId: new ObjectId(followerId),
+    });
+  }
+
+  static async isFollowing(followingId, followerId) {
+    const follow = await db.collection("Follow").findOne({
+      followingId: new ObjectId(followingId),
+      followerId: new ObjectId(followerId),
+    });
+    return follow !== null;
+  }
+
   static async getFollows() {
     return await db.collection("Follow").find().toArray();
   }

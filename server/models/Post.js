@@ -100,6 +100,16 @@ class Post {
         { $push: { likes: like }, $set: { updatedAt: new Date() } }
       );
   }
+
+  static async removeLike(postId, like) {
+    return db.collection("Posts").updateOne(
+      { _id: new ObjectId(postId) },
+      {
+        $pull: { likes: { _id: like._id } },
+        $set: { updatedAt: new Date() },
+      }
+    );
+  }
 }
 
 module.exports = Post;

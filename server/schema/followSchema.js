@@ -19,18 +19,29 @@ const followResolvers = {
   Mutation: {
     followUser: async (_, args, contextValue) => {
       const user = await contextValue.auth();
-      let { followingId, followerId } = args;
-      followerId = user._id;
+      const { followingId } = args;
+      const { _id: followerId } = user;
+
+      if (followingId === followerId.toString()) {
+        throw new Error("You can't follow yourself");
+      }
+
+      const isAlreadyFollowing = await Follow.isFollowing(
+        followingId,
+        followerId
+      );
 
       const followedUser = await User.getUserById(followingId);
       if (!followedUser) throw new Error("User not found");
 
-      const result = await Follow.addFollow(followingId, followerId);
-
-      const newFollowId = result.insertedId;
-
-      const newFollow = await Follow.getFollowById(newFollowId);
-      return newFollow;
+      if (isAlreadyFollowing) {
+        await Follow.removeFollow(followingId, followerId);
+        return {};
+      } else {
+        const result = await Follow.addFollow(followingId, followerId);
+        const newFollow = await Follow.getFollowById(result.insertedId);
+        return newFollow;
+      }
     },
   },
 };

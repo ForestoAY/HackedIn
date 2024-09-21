@@ -125,13 +125,21 @@ const postResolvers = {
     },
     addLike: async (_, args, contextValue) => {
       const user = await contextValue.auth();
-
       const { postId } = args;
-      let { _id, username } = args.newLike;
-      _id = user._id;
-      username = user.username;
+      const { _id, username } = user;
 
-      await Post.addLike(postId, { username, _id });
+      const post = await Post.getPostById(postId);
+
+      const alreadyLiked = post.likes.some(
+        (like) => like._id.toString() === _id.toString()
+      );
+
+      if (alreadyLiked) {
+        await Post.removeLike(postId, { username, _id });
+      } else {
+        await Post.addLike(postId, { username, _id });
+      }
+
       await redis.del("posts");
       const updatedPost = await Post.getPostById(postId);
       return updatedPost;
