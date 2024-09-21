@@ -58,9 +58,14 @@ export default function LoginPage({ navigation }) {
                 "access_token",
                 data.login.access_token
               );
-
+              const userData = {
+                _id: data.login.user._id,
+                username: data.login.user.username,
+                email: data.login.user.email,
+                name: data.login.user.name,
+              };
+              authContext.setUser(userData);
               authContext.setIsSignedIn(true);
-              console.log(authContext);
             } catch (error) {
               Alert.alert("error", error.message);
             }

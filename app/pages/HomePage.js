@@ -56,7 +56,7 @@ export default function HomePage({ navigation }) {
                   </Text>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate("Detail", {
+                      navigation.push("Detail", {
                         postId: item._id,
                       });
                     }}
