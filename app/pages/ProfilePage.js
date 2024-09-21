@@ -4,7 +4,6 @@ import { useQuery, useMutation } from "@apollo/client";
 import { AuthContext } from "../context/auth";
 import { USER } from "../apollo/usersOperation";
 import { FOLLOW_USER } from "../apollo/followsOperation";
-import { deleteItemAsync } from "expo-secure-store";
 
 export default function ProfilePage({ route }) {
   const authContext = useContext(AuthContext);
@@ -120,27 +119,6 @@ export default function ProfilePage({ route }) {
           {followings.length}
         </Text>
         <Text style={{ fontSize: 16, fontWeight: "300" }}> following</Text>
-      </View>
-      <View>
-        <TouchableOpacity
-          style={{
-            marginVertical: 8,
-            backgroundColor: "red",
-            width: 100,
-            height: 45,
-            borderRadius: 5,
-            marginHorizontal: 12,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          onPress={async () => {
-            await deleteItemAsync("access_token");
-            authContext.setIsSignedIn(false);
-            authContext.setUser(null);
-          }}
-        >
-          <Text style={{ color: "white" }}>Logout</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );

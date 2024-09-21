@@ -13,6 +13,7 @@ import SearchPage from "../pages/SearchPage";
 import ProfilePage from "../pages/ProfilePage";
 import Icon from "react-native-vector-icons/Ionicons";
 import { getItemAsync } from "expo-secure-store";
+import LogoutPage from "../pages/LogoutPage";
 
 const logo = require("../assets/hacktiv8.png");
 const Stack = createStackNavigator();
@@ -28,8 +29,8 @@ function HomeTabs() {
             iconName = focused ? "home" : "home-outline";
           } else if (route.name === "Search") {
             iconName = focused ? "search" : "search-outline";
-          } else if (route.name === "Profile") {
-            iconName = focused ? "person" : "person-outline";
+          } else if (route.name === "Logout") {
+            iconName = focused ? "log-out" : "log-out-outline";
           }
           return <Icon name={iconName} size={size} color={color} />;
         },
@@ -89,15 +90,15 @@ function HomeTabs() {
           headerTitleStyle: { fontWeight: "bold" },
         }}
       />
-      {/* <Tab.Screen
-        name="Profile"
-        component={ProfilePage}
+      <Tab.Screen
+        name="Logout"
+        component={LogoutPage}
         options={{
           headerStyle: { backgroundColor: "#83B4FF" },
           headerTintColor: "#fff",
           headerTitleStyle: { fontWeight: "bold" },
         }}
-      /> */}
+      />
     </Tab.Navigator>
   );
 }
