@@ -54,7 +54,7 @@ export default function DetailPage({ navigation, route }) {
 
   const { data, loading, error } = useQuery(GET_POST, {
     variables: { id: postId },
-    fetchPolicy: "cache-first",
+    fetchPolicy: "no-cache",
     onCompleted: (data) => {
       if (data) {
         setComments(data.post.comments);
