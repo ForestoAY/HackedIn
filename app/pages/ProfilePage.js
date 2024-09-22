@@ -1,5 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Text, TouchableOpacity, View, Alert, ActivityIndicator } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import { useQuery, useMutation } from "@apollo/client";
 import { AuthContext } from "../context/auth";
 import { USER } from "../apollo/usersOperation";
@@ -74,54 +80,71 @@ export default function ProfilePage({ route }) {
     <View>
       <Text
         style={{
-          fontSize: 28,
-          marginVertical: 8,
+          fontSize: 32,
+          marginVertical: 4,
           marginHorizontal: 12,
           fontWeight: "600",
         }}
       >
         {user.username}
       </Text>
-      <TouchableOpacity
+      <Text
         style={{
-          marginVertical: 8,
-          backgroundColor: isFollowing ? "green" : "#83B4FF",
-          width: 100,
-          height: 45,
-          borderRadius: 5,
+          fontSize: 24,
+          marginVertical: 4,
           marginHorizontal: 12,
+          fontWeight: "300",
+        }}
+      >
+        {user.name}
+      </Text>
+      {authContext.user._id !== user._id ? (
+        <TouchableOpacity
+          style={{
+            marginVertical: 8,
+            backgroundColor: isFollowing ? "green" : "#83B4FF",
+            width: 100,
+            height: 45,
+            borderRadius: 5,
+            marginHorizontal: 12,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={handleFollow}
+        >
+          <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
+            {isFollowing ? "Followed" : "Follow"}
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        ""
+      )}
+
+      {/* Followers and Followings Section */}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-around",
+          marginTop: 20,
+          height: 200,
           alignItems: "center",
-          justifyContent: "center",
-        }}
-        onPress={handleFollow}
-      >
-        <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
-          {isFollowing ? "Followed" : "Follow"}
-        </Text>
-      </TouchableOpacity>
-      <View
-        style={{
-          marginHorizontal: 12,
-          flexDirection: "row",
-          alignItems: "flex-end",
         }}
       >
-        <Text style={{ fontSize: 18, fontWeight: "600" }}>
-          {followers.length}
-        </Text>
-        <Text style={{ fontSize: 16, fontWeight: "300" }}> followers</Text>
-      </View>
-      <View
-        style={{
-          marginHorizontal: 12,
-          flexDirection: "row",
-          alignItems: "flex-end",
-        }}
-      >
-        <Text style={{ fontSize: 18, fontWeight: "600" }}>
-          {followings.length}
-        </Text>
-        <Text style={{ fontSize: 16, fontWeight: "300" }}> following</Text>
+        {/* TouchableOpacity for Followers */}
+        <TouchableOpacity style={{ alignItems: "center" }}>
+          <Text style={{ fontSize: 28, fontWeight: "600" }}>
+            {followers.length}
+          </Text>
+          <Text style={{ fontSize: 18, fontWeight: "300" }}>Followers</Text>
+        </TouchableOpacity>
+
+        {/* TouchableOpacity for Following */}
+        <TouchableOpacity style={{ alignItems: "center" }}>
+          <Text style={{ fontSize: 28, fontWeight: "600" }}>
+            {followings.length}
+          </Text>
+          <Text style={{ fontSize: 18, fontWeight: "300" }}>Following</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
