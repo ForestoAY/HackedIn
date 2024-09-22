@@ -153,11 +153,11 @@ const styles = StyleSheet.create({
   footerText: {
     textAlign: "center",
     color: "#1A2130",
-    fontSize: 20,
+    fontSize: 14,
   },
   signup: {
     color: "#fff",
     fontWeight: "600",
-    fontSize: 20,
+    fontSize: 14,
   },
 });

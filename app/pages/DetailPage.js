@@ -130,8 +130,6 @@ export default function DetailPage({ navigation, route }) {
     );
   }
 
-  console.log(JSON.stringify(comments, null, 2));
-
   return (
     <>
       <View style={styles.postContainer}>
@@ -251,13 +249,13 @@ const styles = {
     borderRadius: 10,
   },
   username: {
-    fontSize: 30,
-    marginBottom: 8,
+    fontSize: 24,
+    marginBottom: 4,
     fontWeight: "600",
   },
   content: {
-    fontSize: 20,
-    marginBottom: 8,
+    fontSize: 16,
+    marginBottom: 4,
   },
   image: {
     width: "100%",
@@ -270,8 +268,8 @@ const styles = {
     justifyContent: "space-between",
   },
   infoText: {
-    marginHorizontal: 8,
-    fontSize: 20,
+    marginHorizontal: 4,
+    fontSize: 16,
     color: "gray",
   },
   actionContainer: {
@@ -302,7 +300,7 @@ const styles = {
     padding: 10,
     marginBottom: 8,
     width: "100%",
-    fontSize: 20,
+    fontSize: 16,
   },
   submitButton: {
     backgroundColor: "#83B4FF",
@@ -314,19 +312,19 @@ const styles = {
   },
   submitButtonText: {
     color: "white",
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "bold",
   },
   commentContainer: {
     marginVertical: 8,
   },
   commentUsername: {
-    fontSize: 25,
+    fontSize: 20,
     marginBottom: 8,
     fontWeight: "600",
   },
   commentContent: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "400",
   },
   flatListContainer: {
@@ -336,10 +334,10 @@ const styles = {
   emptyCommentsText: {
     textAlign: "center",
     marginTop: 20,
-    fontSize: 18,
+    fontSize: 16,
   },
   commentTimestamp: {
-    fontSize: 14,
+    fontSize: 12,
     color: "gray",
   },
 };
