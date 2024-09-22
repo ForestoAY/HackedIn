@@ -12,9 +12,9 @@ import { CREATE_POST, GET_POSTS } from "../apollo/postsOperation";
 
 export default function AddPost({ navigation }) {
   const [form, setForm] = useState({
-    content: "content terbaru",
-    imgUrl: "https://via.placeholder.com/300",
-    tags: "newest,post,terbaru",
+    content: "",
+    imgUrl: "",
+    tags: "",
   });
 
   const [addPost, { loading, error, data }] = useMutation(CREATE_POST, {

@@ -13,10 +13,10 @@ const logo = require("../assets/hacktiv8.png");
 
 export default function RegisterPage({ navigation }) {
   const [form, setForm] = useState({
-    name: "account",
-    username: "testing account",
-    email: "testing@mail.com",
-    password: "12121212",
+    name: "",
+    username: "",
+    email: "",
+    password: "",
   });
 
   const [register, { loading, error, data }] = useMutation(REGISTER);
@@ -153,11 +153,11 @@ const styles = StyleSheet.create({
   footerText: {
     textAlign: "center",
     color: "#1A2130",
-    fontSize: 16,
+    fontSize: 20,
   },
   signup: {
     color: "#fff",
     fontWeight: "600",
-    fontSize: 16,
+    fontSize: 20,
   },
 });

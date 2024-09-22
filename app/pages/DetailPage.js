@@ -130,6 +130,8 @@ export default function DetailPage({ navigation, route }) {
     );
   }
 
+  console.log(JSON.stringify(comments, null, 2));
+
   return (
     <>
       <View style={styles.postContainer}>
@@ -216,6 +218,9 @@ export default function DetailPage({ navigation, route }) {
               {item.username}
             </Text>
             <Text style={styles.commentContent}>{item.content}</Text>
+            <Text style={styles.commentTimestamp}>
+              {new Date(Number(item.createdAt)).toLocaleString()}
+            </Text>
           </View>
         )}
         keyExtractor={(item, index) => index.toString()}
@@ -246,12 +251,12 @@ const styles = {
     borderRadius: 10,
   },
   username: {
-    fontSize: 24,
+    fontSize: 30,
     marginBottom: 8,
     fontWeight: "600",
   },
   content: {
-    fontSize: 16,
+    fontSize: 20,
     marginBottom: 8,
   },
   image: {
@@ -266,7 +271,7 @@ const styles = {
   },
   infoText: {
     marginHorizontal: 8,
-    fontSize: 16,
+    fontSize: 20,
     color: "gray",
   },
   actionContainer: {
@@ -294,13 +299,14 @@ const styles = {
     borderColor: "gray",
     borderWidth: 1,
     borderRadius: 4,
-    padding: 8,
+    padding: 10,
     marginBottom: 8,
     width: "100%",
+    fontSize: 20,
   },
   submitButton: {
     backgroundColor: "#83B4FF",
-    height: 45,
+    height: 50,
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
@@ -308,20 +314,20 @@ const styles = {
   },
   submitButtonText: {
     color: "white",
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
   },
   commentContainer: {
     marginVertical: 8,
   },
   commentUsername: {
-    fontSize: 20,
+    fontSize: 25,
     marginBottom: 8,
     fontWeight: "600",
   },
   commentContent: {
-    fontSize: 16,
-    fontWeight: "300",
+    fontSize: 20,
+    fontWeight: "400",
   },
   flatListContainer: {
     paddingHorizontal: 16,
@@ -330,5 +336,10 @@ const styles = {
   emptyCommentsText: {
     textAlign: "center",
     marginTop: 20,
+    fontSize: 18,
+  },
+  commentTimestamp: {
+    fontSize: 14,
+    color: "gray",
   },
 };

@@ -16,8 +16,8 @@ const logo = require("../assets/hacktiv8.png");
 
 export default function LoginPage({ navigation }) {
   const authContext = useContext(AuthContext);
-  const [username, setUsername] = useState("foresto");
-  const [password, setPassword] = useState("12121212");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [login, { loading }] = useMutation(LOGIN);
 
   return (
@@ -145,11 +145,11 @@ const styles = StyleSheet.create({
   footerText: {
     textAlign: "center",
     color: "#1A2130",
-    fontSize: 16,
+    fontSize: 20,
   },
   signup: {
     color: "#fff",
     fontWeight: "600",
-    fontSize: 16,
+    fontSize: 20,
   },
 });
