@@ -1,16 +1,18 @@
+import React, { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
   Image,
+  Modal,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { ADD_COMMENT, ADD_LIKE } from "../apollo/postsOperation";
-import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/auth";
 
 const GET_POST = gql`
@@ -47,7 +49,7 @@ const GET_POST = gql`
 export default function DetailPage({ navigation, route }) {
   const { postId } = route.params;
   const authContext = useContext(AuthContext);
-  const [showCommentForm, setShowCommentForm] = useState(false);
+  const [showCommentModal, setShowCommentModal] = useState(false);
   const [newComment, setNewComment] = useState({ content: "" });
   const [comments, setComments] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
@@ -64,23 +66,19 @@ export default function DetailPage({ navigation, route }) {
     },
   });
 
-  useEffect(() => {
-    if (data) {
-      setComments(data.post.comments);
-      const likes = data.post.likes;
-      setIsLiked(likes.some((like) => like._id === authContext.user?._id));
-    }
-  }, [data]);
+  const openCommentModal = () => {
+    setShowCommentModal(true);
+  };
+
+  const closeCommentModal = () => {
+    setShowCommentModal(false);
+  };
 
   const handleCommentChange = (name, value) => {
     setNewComment({ [name]: value });
   };
 
   const [addComment] = useMutation(ADD_COMMENT, {
-    refetchQueries: [GET_POST],
-  });
-
-  const [addLike] = useMutation(ADD_LIKE, {
     refetchQueries: [GET_POST],
   });
 
@@ -94,11 +92,15 @@ export default function DetailPage({ navigation, route }) {
       });
       setComments(response.data.addComment.comments);
       setNewComment({ content: "" });
-      setShowCommentForm(false);
+      closeCommentModal();
     } catch (error) {
       console.log(error);
     }
   };
+
+  const [addLike] = useMutation(ADD_LIKE, {
+    refetchQueries: [GET_POST],
+  });
 
   const handleAddLike = () => {
     addLike({
@@ -156,9 +158,7 @@ export default function DetailPage({ navigation, route }) {
               style={styles.icon}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setShowCommentForm(!showCommentForm)}
-          >
+          <TouchableOpacity onPress={openCommentModal}>
             <Icon
               name="comment-o"
               size={32}
@@ -169,22 +169,39 @@ export default function DetailPage({ navigation, route }) {
         </View>
       </View>
 
-      {showCommentForm && (
-        <View style={styles.commentFormContainer}>
-          <TextInput
-            value={newComment.content}
-            onChangeText={(value) => handleCommentChange("content", value)}
-            placeholder="Add a comment"
-            style={styles.commentInput}
-          />
-          <TouchableOpacity
-            onPress={handleAddComment}
-            style={styles.submitButton}
-          >
-            <Text style={styles.submitButtonText}>Submit Comment</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+      <Modal
+        visible={showCommentModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={closeCommentModal}
+      >
+        <TouchableWithoutFeedback onPress={closeCommentModal}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <TextInput
+                  value={newComment.content}
+                  onChangeText={(value) =>
+                    handleCommentChange("content", value)
+                  }
+                  placeholder="Add a comment"
+                  style={styles.commentInput}
+                />
+                <TouchableOpacity
+                  onPress={handleAddComment}
+                  style={styles.submitButton}
+                >
+                  <Text style={styles.submitButtonText}>Submit Comment</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={closeCommentModal}
+                ></TouchableOpacity>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
 
       <FlatList
         data={comments}
@@ -260,9 +277,18 @@ const styles = {
   icon: {
     marginHorizontal: 8,
   },
-  commentFormContainer: {
-    paddingHorizontal: 16,
-    marginVertical: 8,
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: "90%",
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
   },
   commentInput: {
     borderColor: "gray",
@@ -270,6 +296,7 @@ const styles = {
     borderRadius: 4,
     padding: 8,
     marginBottom: 8,
+    width: "100%",
   },
   submitButton: {
     backgroundColor: "#83B4FF",
@@ -277,6 +304,7 @@ const styles = {
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
+    width: "100%",
   },
   submitButtonText: {
     color: "white",

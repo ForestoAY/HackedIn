@@ -9,6 +9,7 @@ import {
   FlatList,
   StyleSheet,
   Pressable,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { useQuery, useMutation } from "@apollo/client";
 import { AuthContext } from "../context/auth";
@@ -97,9 +98,9 @@ export default function ProfilePage({ navigation, route }) {
             </Pressable>
           )}
         />
-        <Pressable style={styles.closeButton} onPress={closeModal}>
+        <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
           <Text style={styles.closeButtonText}>Close</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -198,7 +199,13 @@ export default function ProfilePage({ navigation, route }) {
         animationType="slide"
         onRequestClose={closeModal}
       >
-        <View style={styles.modalOverlay}>{renderModalContent()}</View>
+        <TouchableWithoutFeedback onPress={closeModal}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              {renderModalContent()}
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </View>
   );
