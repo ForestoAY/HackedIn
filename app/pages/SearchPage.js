@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   ActivityIndicator,
   FlatList,
 } from "react-native";
-import Icon from "react-native-vector-icons/Feather";
 import { SEARCH_USERS } from "../apollo/usersOperation";
-import { FOLLOW_USER } from "../apollo/followsOperation";
 
 export default function SearchPage({ navigation }) {
   const [keyword, setKeyword] = useState("");
   const [debounced, setDebounced] = useState(keyword);
   const [searchUsers, { loading, data }] = useLazyQuery(SEARCH_USERS);
-  const [followUser] = useMutation(FOLLOW_USER);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -33,17 +29,6 @@ export default function SearchPage({ navigation }) {
       searchUsers({ variables: { keyword: debounced } });
     }
   }, [debounced, searchUsers]);
-
-  const handleFollow = async (followingId) => {
-    try {
-      const { data } = await followUser({
-        variables: { followingId },
-      });
-      console.log(`Followed user: ${data.followUser.followingId}`);
-    } catch (error) {
-      console.error("Error following user:", error);
-    }
-  };
 
   return (
     <View style={{ flex: 1, padding: 16 }}>

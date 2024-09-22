@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Text, TouchableOpacity, View, Alert } from "react-native";
+import { Text, TouchableOpacity, View, Alert, ActivityIndicator } from "react-native";
 import { useQuery, useMutation } from "@apollo/client";
 import { AuthContext } from "../context/auth";
 import { USER } from "../apollo/usersOperation";
@@ -42,9 +42,8 @@ export default function ProfilePage({ route }) {
       });
 
       if (followData?.followUser) {
-        // Set isFollowing sesuai dengan hasil follow
         setIsFollowing(true);
-        refetch(); // Refetch untuk mendapatkan data terbaru
+        refetch();
       }
     } catch (error) {
       Alert.alert("Error", error.message);
@@ -54,7 +53,7 @@ export default function ProfilePage({ route }) {
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading...</Text>
+        <ActivityIndicator size={"large"} />
       </View>
     );
   }
