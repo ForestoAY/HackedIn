@@ -64,6 +64,7 @@ export default function LoginPage({ navigation }) {
                 email: data.login.user.email,
                 name: data.login.user.name,
               };
+              await SecureStore.setItemAsync("user", JSON.stringify(userData));
               authContext.setUser(userData);
               authContext.setIsSignedIn(true);
             } catch (error) {

@@ -36,6 +36,7 @@ export default function LogoutPage() {
           }}
           onPress={async () => {
             await deleteItemAsync("access_token");
+            await deleteItemAsync("user");
             authContext.setIsSignedIn(false);
             authContext.setUser(null);
           }}

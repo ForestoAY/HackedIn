@@ -109,12 +109,22 @@ export default function Navigation() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    getItemAsync("access_token").then((data) => {
-      if (data) {
+    const loadUserData = async () => {
+      const token = await getItemAsync("access_token");
+      const userData = await getItemAsync("user");
+
+      if (token) {
         authContext.setIsSignedIn(true);
       }
+
+      if (userData) {
+        authContext.setUser(JSON.parse(userData));
+      }
+
       setReady(true);
-    });
+    };
+
+    loadUserData();
   }, []);
 
   if (!ready) {
