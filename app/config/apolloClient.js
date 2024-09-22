@@ -3,7 +3,7 @@ import { setContext } from "@apollo/client/link/context";
 import { getItemAsync } from "expo-secure-store";
 
 const httpLink = createHttpLink({
-  uri: "http://52.65.58.82/",
+  uri: "https://hackedin.forestoay.xyz/",
 });
 
 const authLink = setContext(async (_, { headers }) => {
